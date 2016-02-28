@@ -20,7 +20,7 @@ Cnf::Cnf(const string cnfName) {
         } else if (ss.peek() == '0') {
             break;
         } else {
-            _clauses.push_back(new Clause(ss.str()));
+            _clauses.push_back(new Clause<Literal>(ss.str()));
         }
     }
 

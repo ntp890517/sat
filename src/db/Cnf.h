@@ -16,9 +16,9 @@ class Cnf {
         unsigned int GetNumOfVariable() {return _nVariable;}
         unsigned int GetNumOfClause() {return _nClause;}
 
-        Clause* GetClause(unsigned int idx) {return _clauses[idx];}
+        Clause<Literal>* GetClause(unsigned int idx) {return _clauses[idx];}
     private:
-        vector<Clause*> _clauses;
+        vector<Clause<Literal>*> _clauses;
         unsigned int _nVariable;
         unsigned int _nClause;
 };

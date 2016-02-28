@@ -30,7 +30,7 @@ void SolverSimulate::Solve() {
 
 void SolverSimulate::CheckAssignment() {
     bool result = true;
-    Clause *cl = NULL;
+    Clause<Literal> *cl = NULL;
     Literal *lit = NULL;
 
     if (IsDebug()) {
