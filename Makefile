@@ -19,10 +19,18 @@ $(MAIN:.cpp=.o): $(MAIN)
 $(OBJS): %.o:%.cpp %.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
-.PHONY: all clean
+.PHONY: all clean regression
 
 all: $(OBJS) $(EXEC)
 
 clean:
 	-rm -f $(OBJS)
 	-rm -f $(EXEC)
+
+regression:
+	@echo "\n[Run] sat.1.cnf"
+	@./$(EXEC) cases/tiny/sat.1.cnf
+	@echo "\n[Run] unsat.cnf"
+	@./$(EXEC) cases/tiny/unsat.cnf
+	@echo "\n[Run] unsat.2.cnf"
+	@./$(EXEC) cases/tiny/unsat.2.cnf
