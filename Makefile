@@ -3,16 +3,20 @@ EXEC = sat
 CXX_FLAGS = -g -Wall
 LD_FLAGS = -g
 
-MODULES = db solver main
+MAIN = src/main/main.cpp
+MODULES = db solver 
 MOD_DIRS = $(addprefix src/,$(MODULES))
 CPP_FILES = $(foreach mod_dir,$(MOD_DIRS),$(wildcard $(mod_dir)/*.cpp))
 OBJS = $(CPP_FILES:.cpp=.o)
 
 
-$(EXEC): $(OBJS)
+$(EXEC): $(MAIN:.cpp=.o) $(OBJS)
 	$(CXX) $(LD_FLAGS) $^ -o $(EXEC) 
 
-$(OBJS): %.o:%.cpp
+$(MAIN:.cpp=.o): $(MAIN)
+	$(CSS) $(CSS_FLAGS) -c -o $@ $<
+
+$(OBJS): %.o:%.cpp %.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 .PHONY: all clean
