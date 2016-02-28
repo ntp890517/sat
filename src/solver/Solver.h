@@ -12,8 +12,11 @@ class Solver {
             UNSAT,
             SAT,
         };
+
         Solver():_result(UNDEF), _debug(false) {};
+
         virtual void ReadCnf(const string cnfName) = 0;
+        virtual void Preprocess() = 0;
         virtual void Solve() = 0;
         virtual string GetAssignment() = 0;
 
