@@ -9,8 +9,8 @@ class Solver {
     public:
         enum Result {
             UNDEF = -1,
-            SAT,
             UNSAT,
+            SAT,
         };
         Solver():_result(UNDEF), _debug(false) {};
         virtual void ReadCnf(const string cnfName) = 0;
