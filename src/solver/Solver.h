@@ -12,7 +12,6 @@ class Solver {
             UNSAT,
             SAT,
         };
-
         Solver():_result(UNDEF), _debug(false) {};
 
         virtual void ReadCnf(const string cnfName) = 0;
