@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <bitset>
+#include <assert.h>
 
 #include "Literal.h"
 
@@ -15,11 +16,18 @@ class Clause {
         Clause(const string s);
 
         unsigned int GetSize() {return _literals.size();}
-
         void Insert(CType* v) {_literals.push_back(v);}
-        CType* GetLiteral(unsigned int idx) {return _literals[idx];}
-        string GetString();
-    private:
+
+        CType* Get(unsigned int idx) {
+            if (idx < _literals.size()) {
+                return _literals[idx];
+            } else {
+                assert(0);
+            }
+        }
+
+        virtual string GetString() = 0;
+    protected:
         vector<CType*> _literals;
 };
 
