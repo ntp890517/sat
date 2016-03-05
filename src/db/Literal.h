@@ -12,6 +12,7 @@ using namespace std;
 class Literal {
     public:
         Literal(const int v);
+
         bool GetSign() {return SIGN_MASK & _v;} // 0: pos 1:neg
         bool IsPos() {return !this->GetSign();}
         bool IsNeg() {return this->GetSign();}
@@ -21,7 +22,7 @@ class Literal {
         void Complement() {_v = SIGN_MASK ^ _v;}
 
         string GetString();
-    private:
+    protected:
         unsigned int _v;
 };
 
