@@ -14,7 +14,7 @@ $(EXEC): $(MAIN:.cpp=.o) $(OBJS)
 	$(CXX) $(LD_FLAGS) $^ -o $(EXEC) 
 
 $(MAIN:.cpp=.o): $(MAIN)
-	$(CSS) $(CSS_FLAGS) -c -o $@ $<
+	$(CXX) $(CSS_FLAGS) -c -o $@ $<
 
 $(OBJS): %.o:%.cpp %.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
