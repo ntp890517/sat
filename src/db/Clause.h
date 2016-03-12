@@ -5,6 +5,7 @@
 #include <sstream>
 #include <bitset>
 #include <assert.h>
+#include <cstdarg>
 
 #include "Literal.h"
 
@@ -14,6 +15,9 @@ template <class CType>
 class Clause {
     public:
         Clause(const string s);
+        Clause(CType *&lit1);
+        Clause(CType *&lit1, CType *&lit2);
+        Clause(CType *&lit1, CType *&lit2, CType *&lit3);
 
         unsigned int GetSize() {return _literals.size();}
         void Insert(CType* v) {_literals.push_back(v);}
@@ -26,7 +30,7 @@ class Clause {
             }
         }
 
-        virtual string GetString() = 0;
+        virtual string GetString();
     protected:
         vector<CType*> _literals;
 };
@@ -43,6 +47,24 @@ Clause<CType>::Clause(const string s) {
             _literals.push_back(new CType(lit));
         }
     }
+}
+
+template <class CType>
+Clause<CType>::Clause(CType *&lit1) {
+    _literals.push_back(lit1);
+}
+
+template <class CType>
+Clause<CType>::Clause(CType *&lit1, CType *&lit2) {
+    _literals.push_back(lit1);
+    _literals.push_back(lit2);
+}
+
+template <class CType>
+Clause<CType>::Clause(CType *&lit1, CType *&lit2, CType *&lit3) {
+    _literals.push_back(lit1);
+    _literals.push_back(lit2);
+    _literals.push_back(lit3);
 }
 
 template <class CType>

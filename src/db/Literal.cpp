@@ -14,6 +14,6 @@ Literal::Literal(const int v) {
 
 string Literal::GetString() {
     stringstream ss;
-    ss << (this->IsPos()? "":"-") << this->GetVariable();
+    ss << (this->IsPos()? "":"-") << this->GetVariable()->GetString();
     return ss.str();
 }

@@ -8,6 +8,7 @@
 Cnf::Cnf(const string cnfName) {
     ifstream fin;
     fin.open(cnfName.c_str());
+    unsigned int nVar, nCl;
 
     string line;
     string buf;
@@ -16,7 +17,8 @@ Cnf::Cnf(const string cnfName) {
         if (ss.peek() == 'c') {
             continue;
         } else if (ss.peek() == 'p') {
-            ss >> buf >> buf >> _nVariable >> _nClause;
+            ss >> buf >> buf >> nVar >> nCl;
+            InitVariable(nVar);
         } else if (ss.peek() == '0') {
             break;
         } else {
@@ -25,7 +27,13 @@ Cnf::Cnf(const string cnfName) {
     }
 
     cout << cnfName << " is parsed. "
-         << " nVar: " << _nVariable
-         << " nClause: " << _nClause << endl;
+         << " nVar: " << GetNumOfVariable()
+         << " nClause: " << nCl << endl;
     fin.close();
+}
+
+void Cnf::InitVariable(const unsigned int n) {
+    for (unsigned i = 0 ; i < n+1 ; i++) {
+        _variable.push_back(new Variable(i));
+    }
 }
