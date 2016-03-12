@@ -22,18 +22,44 @@ Cnf::Cnf(const string cnfName) {
         } else if (ss.peek() == '0') {
             break;
         } else {
-            _clauses.push_back(new Clause<Literal>(ss.str()));
+            _clauses.push_back(ParseClause(ss.str()));
         }
     }
 
     cout << cnfName << " is parsed. "
          << " nVar: " << GetNumOfVariable()
-         << " nClause: " << nCl << endl;
+         << " nClause: " << GetNumOfClause() << endl;
     fin.close();
+}
+
+void Cnf::Display() {
+    for (unsigned i = 0 ; i < _clauses.size() ; i++) {
+        cout << _clauses[i]->GetString() << endl;
+    }
 }
 
 void Cnf::InitVariable(const unsigned int n) {
     for (unsigned i = 0 ; i < n+1 ; i++) {
         _variable.push_back(new Variable(i));
     }
+}
+
+Clause<Literal>* Cnf::ParseClause(string s) {
+    int lit;
+    istringstream iss(s);
+    Clause<Literal> *c = new Clause<Literal>();
+    Literal *pLit = NULL;
+
+    while(iss >> lit) {
+        if (lit == 0) {
+            break;
+        } else if (lit > 0) {
+            pLit = _variable[lit]->GetPosLit();
+            c->Insert(pLit);
+        } else {
+            pLit = _variable[-lit]->GetNegLit();
+            c->Insert(pLit);
+        }
+    }
+    return c;
 }

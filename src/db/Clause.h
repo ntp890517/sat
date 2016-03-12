@@ -15,6 +15,7 @@ template <class CType>
 class Clause {
     public:
         Clause(const string s);
+        Clause() {};
         Clause(CType *&lit1);
         Clause(CType *&lit1, CType *&lit2);
         Clause(CType *&lit1, CType *&lit2, CType *&lit3);

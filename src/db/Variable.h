@@ -13,6 +13,11 @@ class Variable {
     public:
         Variable(const unsigned int v);
 
+        Literal *GetPosLit() {return _posLit;}
+        Literal *GetNegLit() {return _negLit;}
+
+        unsigned int GetNumber() {return _v;}
+
         string GetString();
     protected:
         unsigned int _v;

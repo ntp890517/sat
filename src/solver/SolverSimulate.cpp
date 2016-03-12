@@ -2,11 +2,14 @@
 
 void SolverSimulate::ReadCnf(const string cnfName) {
     _cnf = new Cnf(cnfName);
+    if (IsDebug()) {
+        _cnf->Display();
+    }
 }
 
 string SolverSimulate::GetAssignment() {
     stringstream ss;
-    for (unsigned int i = 0 ; i < _assignment->size()-1 ; i++) {
+    for (unsigned int i = 0 ; i < _assignment->size() - 1 ; i++) {
         ss << (_assignment->at(i)? "":"-") << i+1 << ' ';
     }
     return ss.str();
@@ -48,8 +51,8 @@ void SolverSimulate::CheckAssignment() {
         }
         bool isSatClause = false;
         for (unsigned int j = 0 ; j < cl->GetSize() ; j++) {
-            lit = cl->GetLiteral(j);
-            if (lit->GetSign() ^ _assignment->at(lit->GetVariable() - 1)) {
+            lit = cl->Get(j);
+            if (lit->GetSign() == _assignment->at(lit->GetVariable()->GetNumber() - 1)) {
                 isSatClause = true;
                 break;
             }
