@@ -52,7 +52,8 @@ void SolverSimulate::CheckAssignment() {
         bool isSatClause = false;
         for (unsigned int j = 0 ; j < cl->GetSize() ; j++) {
             lit = cl->Get(j);
-            if (lit->GetSign() == _assignment->at(lit->GetVariable()->GetNumber() - 1)) {
+            if (lit->GetSign() == 
+                _assignment->at(lit->GetVariable()->GetNumeric() - 1)) {
                 isSatClause = true;
                 break;
             }

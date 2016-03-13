@@ -13,18 +13,17 @@ using namespace std;
 
 class Literal {
     public:
-        Literal(const int v);
         Literal(Variable *var, const bool sign) : _var(var), _sign(sign) {}
 
         bool GetSign() {return _sign;}
-        bool IsPos() {return this->_sign;}
-        bool IsNeg() {return !this->_sign;}
+        bool IsPos() {return _sign;}
+        bool IsNeg() {return !_sign;}
 
         Variable *GetVariable() {return _var;}
 
         string GetString();
+        int GetNumeric();
     protected:
-        unsigned int _v;
         Variable *_var;
         bool      _sign;
 };

@@ -19,7 +19,7 @@ class Variable {
         bool IsAssigned() {return _isAssigned;}
         bool GetAssignedValue() {return _assignedValue;}
 
-        unsigned int GetNumber() {return _v;}
+        unsigned int GetNumeric() {return _v;}
         string GetString();
     protected:
         unsigned int _v;
