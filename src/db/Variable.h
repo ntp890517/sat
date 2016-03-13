@@ -16,7 +16,7 @@ class Variable {
         Literal *GetPosLit() {return _posLit;}
         Literal *GetNegLit() {return _negLit;}
 
-        bool IsAssigned() {return _isAssgned;}
+        bool IsAssigned() {return _isAssigned;}
         bool GetAssignedValue() {return _assignedValue;}
 
         unsigned int GetNumber() {return _v;}
