@@ -15,9 +15,6 @@ template <class CType>
 class Clause {
     public:
         Clause() {};
-        Clause(CType *&lit1);
-        Clause(CType *&lit1, CType *&lit2);
-        Clause(CType *&lit1, CType *&lit2, CType *&lit3);
 
         unsigned int GetSize() {return _literals.size();}
         void Insert(CType* v) {_literals.push_back(v);}
@@ -34,24 +31,6 @@ class Clause {
     protected:
         vector<CType*> _literals;
 };
-
-template <class CType>
-Clause<CType>::Clause(CType *&lit1) {
-    _literals.push_back(lit1);
-}
-
-template <class CType>
-Clause<CType>::Clause(CType *&lit1, CType *&lit2) {
-    _literals.push_back(lit1);
-    _literals.push_back(lit2);
-}
-
-template <class CType>
-Clause<CType>::Clause(CType *&lit1, CType *&lit2, CType *&lit3) {
-    _literals.push_back(lit1);
-    _literals.push_back(lit2);
-    _literals.push_back(lit3);
-}
 
 template <class CType>
 string Clause<CType>::GetString() {
