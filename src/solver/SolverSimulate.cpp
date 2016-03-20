@@ -1,59 +1,86 @@
 #include "SolverSimulate.h"
 
 void SolverSimulate::ReadCnf(const string cnfName) {
-    _cnf = new Cnf(cnfName);
-    if (IsDebug()) {
-        _cnf->Display();
-    }
-}
+    ifstream fin;
+    fin.open(cnfName.c_str());
+    unsigned int nVar, nCl;
 
-string SolverSimulate::GetAssignment() {
-    stringstream ss;
-    for (unsigned int i = 0 ; i < _assignment->size() - 1 ; i++) {
-        ss << (_assignment->at(i)? "":"-") << i+1 << ' ';
+    string line;
+    string buf;
+    while(getline(fin, line)) {
+        istringstream ss(line);
+        if (ss.peek() == 'c') {
+            continue;
+        } else if (ss.peek() == 'p') {
+            ss >> buf >> buf >> nVar >> nCl;
+            InitVariables(nVar);
+        } else if (ss.peek() == '0') {
+            break;
+        } else {
+            _clauses.push_back(ParseClause(ss.str()));
+        }
     }
-    return ss.str();
+
+    fin.close();
+
+    cout << cnfName << " is parsed. "
+         << " nVar: " << GetNumOfVariables()
+         << " nClause: " << GetNumOfClauses() << endl;
+    if (IsDebug()) {
+        Display();
+    }
 }
 
 void SolverSimulate::Solve() {
-    _assignment = new vector<bool>(_cnf->GetNumOfVariable() + 1);
+    for (unsigned int i = 1 ; i < GetNumOfVariables() + 1 ; i++) {
+        _variables[i]->Assign(false);
+    }
 
     while(1) {
-        CheckAssignment();
-        if (_result == SAT) {
+        if (CheckAssignment()) {
+            _result = SAT;
             break;
         }
-        NextAssignment();
-        if (_assignment->at(_cnf->GetNumOfVariable())) {
+        if (! NextAssignment()) {
             _result = UNSAT;
             break;
         }
     }
 }
 
-void SolverSimulate::CheckAssignment() {
+string SolverSimulate::GetAssignment() {
+    stringstream ss;
+    for (unsigned int i = 1 ; i < GetNumOfVariables() + 1 ; i++) {
+        ss << (_variables[i]->GetAssignedValue()? "":"-") 
+           << i << ' ';
+    }
+    return ss.str();
+}
+
+bool SolverSimulate::CheckAssignment() {
     bool result = true;
     Clause<Literal> *cl = NULL;
     Literal *lit = NULL;
 
     if (IsDebug()) {
         cout << "check ";
-        for (unsigned int i = 0 ; i < _cnf->GetNumOfVariable() ; i++) {
-            cout << _assignment->at(i);
+        for (unsigned int i = 1 ; i < GetNumOfVariables() + 1 ; i++) {
+            cout << (_variables[i]->GetAssignedValue()? 
+                     _variables[i]->GetPosLit()->GetString() :
+                     _variables[i]->GetNegLit()->GetString()) << ' ';
         }
         cout << endl;
     }
 
-    for (unsigned int i = 0 ; i < _cnf->GetNumOfClause() ; i++) {
-        cl = _cnf->GetClause(i);
+    for (unsigned int i = 0 ; i < GetNumOfClauses() ; i++) {
+        cl = _clauses[i];
         if (IsDebug()) {
             cout << cl->GetString();
         }
         bool isSatClause = false;
         for (unsigned int j = 0 ; j < cl->GetSize() ; j++) {
             lit = cl->Get(j);
-            if (lit->GetSign() == 
-                _assignment->at(lit->GetVariable()->GetNumeric() - 1)) {
+            if (lit->IsSat()) {
                 isSatClause = true;
                 break;
             }
@@ -67,17 +94,50 @@ void SolverSimulate::CheckAssignment() {
         }
     }
 
-    _result = result ? Solver::SAT : Solver::UNSAT;
+    return result;
 }
 
-void SolverSimulate::NextAssignment() {
-    for (unsigned int i = 0 ; i < _cnf->GetNumOfVariable() + 1 ; i++) {
-        if (_assignment->at(i)) {
-            _assignment->at(i) = false;
+bool SolverSimulate::NextAssignment() {
+    for (unsigned int i = 1 ; i < GetNumOfVariables() + 1 ; i++) {
+        if (_variables[i]->GetAssignedValue()) {
+            _variables[i]->Assign(false);
         } else {
-            _assignment->at(i) = true;
+            _variables[i]->Assign(true);
+            return true;
             break;
         }
     }
+    return false;
 }
 
+void SolverSimulate::InitVariables(const unsigned int n) {
+    for (unsigned i = 0 ; i < n+1 ; i++) {
+        _variables.push_back(new Variable(i));
+    }
+}
+
+Clause<Literal>* SolverSimulate::ParseClause(string s) {
+    int lit;
+    istringstream iss(s);
+    Clause<Literal> *c = new Clause<Literal>();
+    Literal *pLit = NULL;
+
+    while(iss >> lit) {
+        if (lit == 0) {
+            break;
+        } else if (lit > 0) {
+            pLit = _variables[lit]->GetPosLit();
+            c->Insert(pLit);
+        } else {
+            pLit = _variables[-lit]->GetNegLit();
+            c->Insert(pLit);
+        }
+    }
+    return c;
+}
+
+void SolverSimulate::Display() {
+    for (unsigned i = 0 ; i < _clauses.size() ; i++) {
+        cout << _clauses[i]->GetString() << endl;
+    }
+}

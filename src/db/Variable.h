@@ -19,6 +19,9 @@ class Variable {
         bool IsAssigned() {return _isAssigned;}
         bool GetAssignedValue() {return _assignedValue;}
 
+        void Unassign() {_isAssigned = false;}
+        void Assign(bool v) {_isAssigned = true; _assignedValue = v;}
+
         unsigned int GetNumeric() {return _v;}
         string GetString();
     protected:

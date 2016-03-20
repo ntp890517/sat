@@ -19,6 +19,8 @@ class Literal {
         bool IsPos() {return _sign;}
         bool IsNeg() {return !_sign;}
 
+        bool IsSat();
+
         Variable *GetVariable() {return _var;}
 
         string GetString();

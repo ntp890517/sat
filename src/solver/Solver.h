@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include "../db/Variable.h"
+#include "../db/Literal.h"
+#include "../db/Clause.h"
 #include "../db/Cnf.h"
 
 class Solver {

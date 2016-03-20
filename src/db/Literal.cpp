@@ -2,6 +2,14 @@
 
 using namespace std;
 
+bool Literal::IsSat() {
+    if (! _var->IsAssigned()) {
+        return false;
+    } else {
+        return (_sign == _var->GetAssignedValue());
+    }
+}
+
 string Literal::GetString() {
     stringstream ss;
     ss << (IsPos()? "":"-") << GetVariable()->GetString();

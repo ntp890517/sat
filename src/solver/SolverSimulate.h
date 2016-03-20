@@ -3,6 +3,7 @@
 
 #include "Solver.h"
 #include <sstream>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -13,10 +14,18 @@ class SolverSimulate: public Solver {
         virtual void Solve();
         virtual string GetAssignment();
     private:
-        void CheckAssignment();
-        void NextAssignment();
+        bool CheckAssignment();
+        bool NextAssignment();
 
-        Cnf *_cnf;
-        vector<bool> *_assignment;
+        unsigned int GetNumOfClauses() {return _clauses.size();}
+        unsigned int GetNumOfVariables() {return _variables.size() - 1;}
+
+        void InitVariables(const unsigned int nVar);
+        Clause<Literal> *ParseClause(string s);
+        void Display();
+
+    private:
+        vector<Clause<Literal>*> _clauses;
+        vector<Variable*> _variables;
 };
 #endif
