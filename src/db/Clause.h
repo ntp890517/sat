@@ -14,7 +14,6 @@ using namespace std;
 template <class CType>
 class Clause {
     public:
-        Clause(const string s);
         Clause() {};
         Clause(CType *&lit1);
         Clause(CType *&lit1, CType *&lit2);
@@ -35,20 +34,6 @@ class Clause {
     protected:
         vector<CType*> _literals;
 };
-
-template <class CType>
-Clause<CType>::Clause(const string s) {
-    int lit;
-    istringstream iss(s);
-
-    while(iss >> lit) {
-        if (lit == 0) {
-            break;
-        } else {
-            _literals.push_back(new CType(lit));
-        }
-    }
-}
 
 template <class CType>
 Clause<CType>::Clause(CType *&lit1) {
