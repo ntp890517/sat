@@ -23,9 +23,9 @@ void SolverSimulate::ReadCnf(const string cnfName) {
 
     fin.close();
 
-    cout << cnfName << " is parsed. "
-         << " nVar: " << GetNumOfVariables()
-         << " nClause: " << GetNumOfClauses() << endl;
+    MSG() << cnfName << " is parsed. "
+          << " nVar: " << GetNumOfVariables()
+          << " nClause: " << GetNumOfClauses() << endl;
     if (IsDebug()) {
         Display();
     }
