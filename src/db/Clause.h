@@ -9,6 +9,7 @@
 #include <typeinfo>
 
 #include "Literal.h"
+#include "../ut/ut.h"
 
 using namespace std;
 
@@ -17,8 +18,8 @@ class Clause {
     public:
         Clause() {
             if (typeid(CType) != typeid(Literal)) {
-                cout << "ProgErr: Clause is for Literal and its derived class."
-                     << endl;
+                PROGERROR() << "Clause is for Literal and its derived class."
+                            << endl;
                 assert(0);
             }
         };
