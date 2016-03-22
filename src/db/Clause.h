@@ -17,11 +17,13 @@ class Clause {
         Clause() {};
 
         unsigned int GetSize() {return _literals.size();}
-        void Insert(CType* v) {_literals.push_back(v);}
+        void Insert(CType* v) {_literals.push_back(static_cast<Literal*>(v));}
+
+        bool IsSat();
 
         CType* Get(unsigned int idx) {
             if (idx < _literals.size()) {
-                return _literals[idx];
+                return static_cast<CType*>(_literals[idx]);
             } else {
                 assert(0);
             }
@@ -29,7 +31,7 @@ class Clause {
 
         virtual string GetString();
     protected:
-        vector<CType*> _literals;
+        vector<Literal*> _literals;
 };
 
 template <class CType>
