@@ -6,6 +6,7 @@
 #include <bitset>
 #include <assert.h>
 #include <cstdarg>
+#include <typeinfo>
 
 #include "Literal.h"
 
@@ -14,7 +15,13 @@ using namespace std;
 template <class CType>
 class Clause {
     public:
-        Clause() {};
+        Clause() {
+            if (typeid(CType) != typeid(Literal)) {
+                cout << "ProgErr: Clause is for Literal and its derived class."
+                     << endl;
+                assert(0);
+            }
+        };
 
         unsigned int GetSize() {return _literals.size();}
         void Insert(CType* v) {_literals.push_back(static_cast<Literal*>(v));}
