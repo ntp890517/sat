@@ -22,11 +22,11 @@ class SolverSimulate: public Solver {
         unsigned int GetNumOfVariables() {return _variables.size() - 1;}
 
         void InitVariables(const unsigned int nVar);
-        Clause<Literal> *ParseClause(string s);
+        Clause *ParseClause(string s);
         void Display();
 
     private:
-        vector<Clause<Literal>*> _clauses;
+        vector<Clause*> _clauses;
         vector<Variable*> _variables;
 };
 #endif

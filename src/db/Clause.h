@@ -13,25 +13,18 @@
 
 using namespace std;
 
-template <class CType>
 class Clause {
     public:
-        Clause() {
-            if (typeid(CType) != typeid(Literal)) {
-                PROGERROR() << "Clause is for Literal and its derived class."
-                            << endl;
-                assert(0);
-            }
-        };
+        Clause() {};
 
         unsigned int GetSize() {return _literals.size();}
-        void Insert(CType* v) {_literals.push_back(static_cast<Literal*>(v));}
+        void Insert(Literal* v) {_literals.push_back(v);}
 
         bool IsSat();
 
-        CType* Get(unsigned int idx) {
+        Literal* Get(unsigned int idx) {
             if (idx < _literals.size()) {
-                return static_cast<CType*>(_literals[idx]);
+                return _literals[idx];
             } else {
                 assert(0);
             }
@@ -41,15 +34,4 @@ class Clause {
     protected:
         vector<Literal*> _literals;
 };
-
-template <class CType>
-string Clause<CType>::GetString() {
-    string s;
-    for (unsigned int i = 0 ; i < _literals.size() ; i++) {
-        s += _literals[i]->GetString();
-        s += ' ';
-    }
-    return s;
-}
-
 #endif

@@ -59,7 +59,7 @@ string SolverSimulate::GetAssignment() {
 
 bool SolverSimulate::CheckAssignment() {
     bool result = true;
-    Clause<Literal> *cl = NULL;
+    Clause *c = NULL;
     Literal *lit = NULL;
 
     if (IsDebug()) {
@@ -73,13 +73,13 @@ bool SolverSimulate::CheckAssignment() {
     }
 
     for (unsigned int i = 0 ; i < GetNumOfClauses() ; i++) {
-        cl = _clauses[i];
+        c = _clauses[i];
         if (IsDebug()) {
-            cout << cl->GetString();
+            cout << c->GetString();
         }
         bool isSatClause = false;
-        for (unsigned int j = 0 ; j < cl->GetSize() ; j++) {
-            lit = cl->Get(j);
+        for (unsigned int j = 0 ; j < c->GetSize() ; j++) {
+            lit = c->Get(j);
             if (lit->IsSat()) {
                 isSatClause = true;
                 break;
@@ -116,10 +116,10 @@ void SolverSimulate::InitVariables(const unsigned int n) {
     }
 }
 
-Clause<Literal>* SolverSimulate::ParseClause(string s) {
+Clause* SolverSimulate::ParseClause(string s) {
     int lit;
     istringstream iss(s);
-    Clause<Literal> *c = new Clause<Literal>();
+    Clause *c = new Clause();
     Literal *pLit = NULL;
 
     while(iss >> lit) {
