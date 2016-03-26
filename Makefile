@@ -1,14 +1,15 @@
 CXX = g++
 EXEC = sat
+TEST_EXEC = clauseTest
 CXX_FLAGS = -g -Wall
 LD_FLAGS = -g
 
 MAIN = src/main/main.cpp
+TEST = src/main/clauseTest.cpp
 MODULES = db sol 
 MOD_DIRS = $(addprefix src/,$(MODULES))
 CPP_FILES = $(foreach mod_dir,$(MOD_DIRS),$(wildcard $(mod_dir)/*.cpp))
 OBJS = $(CPP_FILES:.cpp=.o)
-
 
 $(EXEC): $(MAIN:.cpp=.o) $(OBJS)
 	$(CXX) $(LD_FLAGS) $^ -o $(EXEC) 
@@ -19,13 +20,17 @@ $(MAIN:.cpp=.o): $(MAIN)
 $(OBJS): %.o:%.cpp %.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
-.PHONY: all clean regression
+$(TEST_EXEC): $(TEST:.cpp=.o) $(OBJS)
+	$(CXX) $(LD_FLAGS) $^ -o $(TEST_EXEC)
 
-all: $(OBJS) $(EXEC)
+.PHONY: all clean regression test
+
+all: $(OBJS) $(EXEC) $(TEST_EXEC)
 
 clean:
 	-rm -f $(OBJS)
 	-rm -f $(EXEC)
+	-rm -f $(TEST_EXEC)
 
 regression:
 	@echo "\n[Run] sat.1.cnf"
@@ -34,3 +39,7 @@ regression:
 	@./$(EXEC) cases/tiny/unsat.cnf
 	@echo "\n[Run] unsat.2.cnf"
 	@./$(EXEC) cases/tiny/unsat.2.cnf
+
+test: $(TEST_EXEC)
+	@echo "\n[Run] clauseTest"
+	@./$(TEST_EXEC)
