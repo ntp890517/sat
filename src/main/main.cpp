@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../solver/SolverSimulate.h"
+#include "../sol/SolverSimulate.h"
 
 using namespace std;
 
