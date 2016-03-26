@@ -4,7 +4,7 @@ CXX_FLAGS = -g -Wall
 LD_FLAGS = -g
 
 MAIN = src/main/main.cpp
-MODULES = db solver 
+MODULES = db sol 
 MOD_DIRS = $(addprefix src/,$(MODULES))
 CPP_FILES = $(foreach mod_dir,$(MOD_DIRS),$(wildcard $(mod_dir)/*.cpp))
 OBJS = $(CPP_FILES:.cpp=.o)
