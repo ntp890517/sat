@@ -4,6 +4,9 @@
 #include "Solver.h"
 #include <iostream>
 #include <fstream>
+#include "../db/Clause2Watch.h"
+#include "../db/LiteralDP.h"
+#include "../db/VariableDP.h"
 #include "../ut/ut.h"
 
 typedef unsigned int Level;
@@ -20,14 +23,14 @@ class SolverDPLL : public Solver {
         void Display();
     private:
         void InitVariables(unsigned int);
-        Clause* ParseClause(string s);
+        Clause2Watch* ParseClause(string s);
         Solver::Result Preprocess();
-        void Decide();
+        LiteralDP* Decide();
         Solver::Result Deduce();
         Level Analyze();
         void BackTrack(Level lv);
     private:
-        vector<Clause*> _clauses;
-        vector<Variable*> _variables;
+        vector<Clause2Watch*> _clauses;
+        vector<VariableDP*> _variables;
 };
 #endif

@@ -3,8 +3,11 @@
 
 using namespace std;
 
-Variable::Variable(const unsigned int v) : _v(v), _isAssigned(false)
-{
+Variable::Variable() : _isAssigned(false) {
+}
+
+Variable::Variable(const unsigned int v) : _isAssigned(false) {
+    _v = v;
     _posLit = new Literal(this, true);
     _negLit = new Literal(this, false);
 }

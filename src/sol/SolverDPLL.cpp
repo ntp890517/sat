@@ -31,11 +31,11 @@ void SolverDPLL::ReadCnf(const string cnfName) {
     }
 }
 
-Clause* SolverDPLL::ParseClause(string s) {
+Clause2Watch* SolverDPLL::ParseClause(string s) {
     int lit;
     istringstream iss(s);
-    Clause *c = new Clause();
-    Literal *pLit = NULL;
+    Clause2Watch *c = new Clause2Watch;
+    LiteralDP *pLit = NULL;
 
     while(iss >> lit) {
         if (lit == 0) {
@@ -43,9 +43,11 @@ Clause* SolverDPLL::ParseClause(string s) {
         } else if (lit > 0) {
             pLit = _variables[lit]->GetPosLit();
             c->Insert(pLit);
+            pLit->AddClause(c);
         } else {
             pLit = _variables[-lit]->GetNegLit();
             c->Insert(pLit);
+            pLit->AddClause(c);
         }
     }
     return c;
@@ -89,7 +91,7 @@ void SolverDPLL::Solve()
 
 void SolverDPLL::InitVariables(const unsigned int n) {
     for (unsigned i = 0 ; i < n+1 ; i++) {
-        _variables.push_back(new Variable(i));
+        _variables.push_back(new VariableDP(i));
     }
 }
 
@@ -104,9 +106,25 @@ Solver::Result SolverDPLL::Preprocess()
     return Solver::UNDEF;
 }
 
-void SolverDPLL::Decide()
+LiteralDP* SolverDPLL::Decide()
 {
-    ;
+    for (unsigned int i = 0 ; i < _variables.size() ; i++) {
+        if (_variables[i]->IsAssigned()) {
+            continue;
+        }
+
+        if (_variables[i]->GetPosLit()->HasNoRelatedClauses()) {
+            return _variables[i]->GetNegLit();
+        }
+
+        if (_variables[i]->GetNegLit()->HasNoRelatedClauses()) {
+            return _variables[i]->GetPosLit();
+        }
+
+        return _variables[i]->GetNegLit();
+    }
+
+    return NULL;
 }
 
 Solver::Result SolverDPLL::Deduce()

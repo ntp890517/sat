@@ -11,6 +11,7 @@ class Literal;
 
 class Variable {
     public:
+        Variable();
         Variable(const unsigned int v);
 
         Literal *GetPosLit() {return _posLit;}
