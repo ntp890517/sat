@@ -20,6 +20,7 @@ class Literal {
         bool IsNeg() {return !_sign;}
 
         bool IsSat();
+        bool IsUnsat();
 
         Variable *GetVariable() {return _var;}
 

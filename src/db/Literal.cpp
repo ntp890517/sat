@@ -10,6 +10,14 @@ bool Literal::IsSat() {
     }
 }
 
+bool Literal::IsUnsat() {
+    if (! _var->IsAssigned()) {
+        return false;
+    } else {
+        return (_sign != _var->GetAssignedValue());
+    }
+}
+
 string Literal::GetString() {
     stringstream ss;
     ss << (IsPos()? "":"-") << GetVariable()->GetString();
