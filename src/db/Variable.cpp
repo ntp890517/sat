@@ -3,8 +3,7 @@
 
 using namespace std;
 
-Variable::Variable() : _isAssigned(false) {
-}
+Variable::Variable() : _isAssigned(false) {};
 
 Variable::Variable(const unsigned int v) : _isAssigned(false) {
     _v = v;
