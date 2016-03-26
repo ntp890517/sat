@@ -69,9 +69,8 @@ void SolverDPLL::Solve()
         return;
     }
     while(1) {
-        Decide();
         while(true) {
-            _result = Deduce();
+            _result = Deduce(Decide());
             if (_result == UNDEF) {
                 Level backToLevel = Analyze();
                 if (backToLevel < 0) {
@@ -114,21 +113,27 @@ LiteralDP* SolverDPLL::Decide()
         }
 
         if (_variables[i]->GetPosLit()->HasNoRelatedClauses()) {
+            _variables[i]->Assign(false);
             return _variables[i]->GetNegLit();
         }
 
         if (_variables[i]->GetNegLit()->HasNoRelatedClauses()) {
+            _variables[i]->Assign(true);
             return _variables[i]->GetPosLit();
         }
 
+        _variables[i]->Assign(false);
         return _variables[i]->GetNegLit();
     }
 
     return NULL;
 }
 
-Solver::Result SolverDPLL::Deduce()
+Solver::Result SolverDPLL::Deduce(LiteralDP* lit)
 {
+    assert(lit);
+    _impGraph.push_back(new vector<LiteralDP*>);
+    _impGraph.back.push_back(lit);
     return Solver::UNDEF;
 }
 

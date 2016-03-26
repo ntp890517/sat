@@ -8,6 +8,7 @@
 #include "../db/LiteralDP.h"
 #include "../db/VariableDP.h"
 #include "../ut/ut.h"
+#include <list>
 
 typedef unsigned int Level;
 
@@ -26,11 +27,13 @@ class SolverDPLL : public Solver {
         Clause2Watch* ParseClause(string s);
         Solver::Result Preprocess();
         LiteralDP* Decide();
-        Solver::Result Deduce();
+        Solver::Result Deduce(Literal DP*);
         Level Analyze();
         void BackTrack(Level lv);
     private:
         vector<Clause2Watch*> _clauses;
         vector<VariableDP*> _variables;
+
+        list<vector<LiteralDP*> > _impGraph;
 };
 #endif
