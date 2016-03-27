@@ -9,6 +9,7 @@
 #include "../db/VariableDP.h"
 #include "../ut/ut.h"
 #include <list>
+#include <queue>
 
 typedef unsigned int Level;
 
@@ -33,5 +34,7 @@ class SolverDPLL : public Solver {
     private:
         vector<Clause2Watch*> _clauses;
         vector<VariableDP*> _variables;
+
+        list<vector<pair<LiteralDP*, Clause2Watch*> > > _impGraph;
 };
 #endif

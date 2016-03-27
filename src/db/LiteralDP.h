@@ -12,6 +12,11 @@ class LiteralDP : public Literal {
         void AddClause(Clause2Watch* clause) {_clauses.push_back(clause);}
 
         bool HasNoRelatedClauses() {return _clauses.empty();}
+        
+        vector<Clause2Watch*>::iterator GetClausesBegin() {
+            return _clauses.begin();}
+        vector<Clause2Watch*>::iterator GetClausesEnd() {
+            return _clauses.end();}
     protected:
         vector<Clause2Watch*> _clauses;
 };

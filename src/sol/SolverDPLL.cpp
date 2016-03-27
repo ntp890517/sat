@@ -69,21 +69,17 @@ void SolverDPLL::Solve()
         return;
     }
     while(1) {
-        while(true) {
-            _result = Deduce(Decide());
-            if (_result == UNDEF) {
-                Level backToLevel = Analyze();
-                if (backToLevel < 0) {
-                    _result = UNSAT;
-                    return;
-                } else {
-                    BackTrack(backToLevel);
-                }
-            } else if (_result == SAT) {
+        _result = Deduce(Decide());
+        if (_result == UNDEF) {
+            Level backToLevel = Analyze();
+            if (backToLevel < 0) {
+                _result = UNSAT;
                 return;
             } else {
-                break;
+                BackTrack(backToLevel);
             }
+        } else if (_result == SAT) {
+            return;
         }
     }
 }
@@ -132,6 +128,16 @@ LiteralDP* SolverDPLL::Decide()
 Solver::Result SolverDPLL::Deduce(LiteralDP* lit)
 {
     assert(lit);
+    _impGraph.push_back(vector<pair<LiteralDP*, Clause2Watch*> > ());
+    _impGraph.back().push_back(make_pair(lit, (Clause2Watch*)NULL));
+
+    queue<LiteralDP*> assign;
+    //LiteralDP* currAssign = lit;
+
+    do {
+        ;
+    } while (! assign.empty());
+
     return Solver::UNDEF;
 }
 
