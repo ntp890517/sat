@@ -41,11 +41,11 @@ Clause2Watch* SolverDPLL::ParseClause(string s) {
         if (lit == 0) {
             break;
         } else if (lit > 0) {
-            pLit = _variables[lit]->GetPosLit();
+            pLit = static_cast<LiteralDP*>(_variables[lit]->GetPosLit());
             c->Insert(pLit);
             pLit->AddClause(c);
         } else {
-            pLit = _variables[-lit]->GetNegLit();
+            pLit = static_cast<LiteralDP*>(_variables[-lit]->GetNegLit());
             c->Insert(pLit);
             pLit->AddClause(c);
         }
@@ -112,18 +112,18 @@ LiteralDP* SolverDPLL::Decide()
             continue;
         }
 
-        if (_variables[i]->GetPosLit()->HasNoRelatedClauses()) {
+        if (static_cast<LiteralDP*>(_variables[i]->GetPosLit())->HasNoRelatedClauses()) {
             _variables[i]->Assign(false);
-            return _variables[i]->GetNegLit();
+            return static_cast<LiteralDP*>(_variables[i]->GetNegLit());
         }
 
-        if (_variables[i]->GetNegLit()->HasNoRelatedClauses()) {
+        if (static_cast<LiteralDP*>(_variables[i]->GetNegLit())->HasNoRelatedClauses()) {
             _variables[i]->Assign(true);
-            return _variables[i]->GetPosLit();
+            return static_cast<LiteralDP*>(_variables[i]->GetPosLit());
         }
 
         _variables[i]->Assign(false);
-        return _variables[i]->GetNegLit();
+        return static_cast<LiteralDP*>(_variables[i]->GetNegLit());
     }
 
     return NULL;
@@ -132,8 +132,6 @@ LiteralDP* SolverDPLL::Decide()
 Solver::Result SolverDPLL::Deduce(LiteralDP* lit)
 {
     assert(lit);
-    _impGraph.push_back(new vector<LiteralDP*>);
-    _impGraph.back.push_back(lit);
     return Solver::UNDEF;
 }
 

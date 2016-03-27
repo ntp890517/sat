@@ -27,13 +27,11 @@ class SolverDPLL : public Solver {
         Clause2Watch* ParseClause(string s);
         Solver::Result Preprocess();
         LiteralDP* Decide();
-        Solver::Result Deduce(Literal DP*);
+        Solver::Result Deduce(LiteralDP*);
         Level Analyze();
         void BackTrack(Level lv);
     private:
         vector<Clause2Watch*> _clauses;
         vector<VariableDP*> _variables;
-
-        list<vector<LiteralDP*> > _impGraph;
 };
 #endif
