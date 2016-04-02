@@ -11,6 +11,10 @@ int main() {
     Variable* var2 = new Variable(2);
     Variable* var3 = new Variable(3);
 
+    var1->InitLiterals<Literal>();
+    var2->InitLiterals<Literal>();
+    var3->InitLiterals<Literal>();
+
     c->Insert(var1->GetPosLit());
     c->Insert(var2->GetNegLit());
     c->Insert(var3->GetPosLit());

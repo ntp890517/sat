@@ -2,7 +2,7 @@ CXX = g++
 EXEC = sat
 TEST_EXEC = clauseTest
 CXX_FLAGS = -g -Wall -std=c++11
-LD_FLAGS = -g
+LD_FLAGS = -g -std=c++11
 
 MAIN = src/main/main.cpp
 TEST = src/main/clauseTest.cpp

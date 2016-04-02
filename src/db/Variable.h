@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <type_traits> // C++11
+#include <cassert>
 
 using namespace std;
 
@@ -18,7 +18,6 @@ class Variable {
         void InitLiterals() {
             _posLit = new LiteralType(this, true);
             _negLit = new LiteralType(this, false);
-            assert(is_base_of<Literal, LiteralType>::value);
         };
 
         Literal *GetPosLit() {return _posLit;}

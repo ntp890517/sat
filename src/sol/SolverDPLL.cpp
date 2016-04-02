@@ -129,8 +129,6 @@ Literal* SolverDPLL::Decide()
 Solver::Result SolverDPLL::Deduce(Literal* lit)
 {
     assert(lit);
-    _impGraph.push_back(vector<pair<Literal*, Clause2Watch*> > ());
-    _impGraph.back().push_back(make_pair(lit, (Clause2Watch*)NULL));
 
     queue<Literal*> assign;
     //Literal* currAssign = lit;
@@ -150,5 +148,10 @@ Level SolverDPLL::Analyze()
 void SolverDPLL::BackTrack(Level lv)
 {
     ;
+}
+
+// ImplicationGraph
+bool ImplicationGraph::BCP() {
+    return true;
 }
 

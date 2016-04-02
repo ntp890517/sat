@@ -7,11 +7,12 @@
 #include <list>
 
 #include "Variable.h"
-#include "Clause.h"
 
 using namespace std;
 
 #define SIGN_MASK 0x1
+
+class Clause;
 
 class Literal {
     public:
