@@ -15,8 +15,6 @@ using namespace std;
 
 class Clause {
     public:
-        Clause() {};
-
         unsigned int GetSize() {return _literals.size();}
         void Insert(Literal* v) {_literals.push_back(v);}
 
