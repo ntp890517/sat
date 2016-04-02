@@ -7,8 +7,6 @@ class Clause2Watch : public Clause {
         void Setup2Watch();
         void Update2Watch(Literal* literalToBeUpdated);
 
-        bool IsUnsat();
-
         Literal* GetWatch1() {return _literals[_watchIdx1];}
         Literal* GetWatch2() {return _literals[_watchIdx2];}
     protected:

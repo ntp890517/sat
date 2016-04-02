@@ -20,7 +20,8 @@ class Clause {
         unsigned int GetSize() {return _literals.size();}
         void Insert(Literal* v) {_literals.push_back(v);}
 
-        bool IsSat();
+        virtual bool IsSat();
+        virtual bool IsUnsat();
 
         Literal* Get(unsigned int idx) {
             if (idx < _literals.size()) {

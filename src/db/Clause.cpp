@@ -11,3 +11,23 @@ string Clause::GetString() {
     }
     return s;
 }
+
+bool Clause::IsSat() {
+    for (unsigned int i = 0 ; i < _literals.size() ; i++) {
+        if (_literals[i]->IsSat()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Clause::IsUnsat() {
+    for (unsigned int i = 0 ; i < _literals.size() ; i++) {
+        if (! _literals[i]->IsUnsat()) {
+            return false;
+        }
+    }
+
+    return true;
+}
