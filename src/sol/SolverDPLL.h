@@ -5,8 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include "../db/Clause2Watch.h"
-#include "../db/LiteralDP.h"
-#include "../db/VariableDP.h"
+#include "../db/Literal.h"
+#include "../db/Variable.h"
 #include "../ut/ut.h"
 #include <list>
 #include <queue>
@@ -27,14 +27,14 @@ class SolverDPLL : public Solver {
         void InitVariables(unsigned int);
         Clause2Watch* ParseClause(string s);
         Solver::Result Preprocess();
-        LiteralDP* Decide();
-        Solver::Result Deduce(LiteralDP*);
+        Literal* Decide();
+        Solver::Result Deduce(Literal*);
         Level Analyze();
         void BackTrack(Level lv);
     private:
         vector<Clause2Watch*> _clauses;
-        vector<VariableDP*> _variables;
+        vector<Variable*> _variables;
 
-        list<vector<pair<LiteralDP*, Clause2Watch*> > > _impGraph;
+        list<vector<pair<Literal*, Clause2Watch*> > > _impGraph;
 };
 #endif

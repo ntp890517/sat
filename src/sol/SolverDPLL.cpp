@@ -35,17 +35,17 @@ Clause2Watch* SolverDPLL::ParseClause(string s) {
     int lit;
     istringstream iss(s);
     Clause2Watch *c = new Clause2Watch;
-    LiteralDP *pLit = NULL;
+    Literal *pLit = NULL;
 
     while(iss >> lit) {
         if (lit == 0) {
             break;
         } else if (lit > 0) {
-            pLit = static_cast<LiteralDP*>(_variables[lit]->GetPosLit());
+            pLit = _variables[lit]->GetPosLit();
             c->Insert(pLit);
             pLit->AddClause(c);
         } else {
-            pLit = static_cast<LiteralDP*>(_variables[-lit]->GetNegLit());
+            pLit = _variables[-lit]->GetNegLit();
             c->Insert(pLit);
             pLit->AddClause(c);
         }
@@ -86,7 +86,7 @@ void SolverDPLL::Solve()
 
 void SolverDPLL::InitVariables(const unsigned int n) {
     for (unsigned i = 0 ; i < n+1 ; i++) {
-        _variables.push_back(new VariableDP(i));
+        _variables.push_back(new Variable(i));
     }
 }
 
@@ -101,38 +101,38 @@ Solver::Result SolverDPLL::Preprocess()
     return Solver::UNDEF;
 }
 
-LiteralDP* SolverDPLL::Decide()
+Literal* SolverDPLL::Decide()
 {
     for (unsigned int i = 0 ; i < _variables.size() ; i++) {
         if (_variables[i]->IsAssigned()) {
             continue;
         }
 
-        if (static_cast<LiteralDP*>(_variables[i]->GetPosLit())->HasNoRelatedClauses()) {
+        if (_variables[i]->GetPosLit()->HasNoRelatedClauses()) {
             _variables[i]->Assign(false);
-            return static_cast<LiteralDP*>(_variables[i]->GetNegLit());
+            return _variables[i]->GetNegLit();
         }
 
-        if (static_cast<LiteralDP*>(_variables[i]->GetNegLit())->HasNoRelatedClauses()) {
+        if (_variables[i]->GetNegLit()->HasNoRelatedClauses()) {
             _variables[i]->Assign(true);
-            return static_cast<LiteralDP*>(_variables[i]->GetPosLit());
+            return _variables[i]->GetPosLit();
         }
 
         _variables[i]->Assign(false);
-        return static_cast<LiteralDP*>(_variables[i]->GetNegLit());
+        return _variables[i]->GetNegLit();
     }
 
     return NULL;
 }
 
-Solver::Result SolverDPLL::Deduce(LiteralDP* lit)
+Solver::Result SolverDPLL::Deduce(Literal* lit)
 {
     assert(lit);
-    _impGraph.push_back(vector<pair<LiteralDP*, Clause2Watch*> > ());
+    _impGraph.push_back(vector<pair<Literal*, Clause2Watch*> > ());
     _impGraph.back().push_back(make_pair(lit, (Clause2Watch*)NULL));
 
-    queue<LiteralDP*> assign;
-    //LiteralDP* currAssign = lit;
+    queue<Literal*> assign;
+    //Literal* currAssign = lit;
 
     do {
         ;
