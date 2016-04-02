@@ -4,8 +4,10 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <list>
 
 #include "Variable.h"
+#include "Clause.h"
 
 using namespace std;
 
@@ -26,9 +28,13 @@ class Literal {
 
         string GetString();
         int GetNumeric();
+
+        void AddClause(Clause* clause) {_clauses.push_back(clause);}
+        bool HasNoRelatedClauses() {return _clauses.empty();}
     protected:
         Variable *_var;
         bool      _sign;
+        list<Clause*> _clauses;
 };
 
 #endif
