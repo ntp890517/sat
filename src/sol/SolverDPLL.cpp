@@ -87,6 +87,7 @@ void SolverDPLL::Solve()
 void SolverDPLL::InitVariables(const unsigned int n) {
     for (unsigned i = 0 ; i < n+1 ; i++) {
         _variables.push_back(new Variable(i));
+        _variables.back()->InitLiterals<Literal>();
     }
 }
 

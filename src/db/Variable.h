@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <type_traits> // C++11
 
 using namespace std;
 
@@ -11,8 +12,14 @@ class Literal;
 
 class Variable {
     public:
-        Variable();
         Variable(const unsigned int v);
+
+        template<class LiteralType> 
+        void InitLiterals() {
+            _posLit = new LiteralType(this, true);
+            _negLit = new LiteralType(this, false);
+            assert(is_base_of<Literal, LiteralType>::value);
+        };
 
         Literal *GetPosLit() {return _posLit;}
         Literal *GetNegLit() {return _negLit;}

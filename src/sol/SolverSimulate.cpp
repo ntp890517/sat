@@ -113,6 +113,7 @@ bool SolverSimulate::NextAssignment() {
 void SolverSimulate::InitVariables(const unsigned int n) {
     for (unsigned i = 0 ; i < n+1 ; i++) {
         _variables.push_back(new Variable(i));
+        _variables.back()->InitLiterals<Literal>();
     }
 }
 
