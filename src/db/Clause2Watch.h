@@ -9,15 +9,16 @@ class Clause2Watch : public Clause {
 
         bool IsUnsat();
 
-        Literal* GetWatch1() {return _literals[_watch1];}
-        Literal* GetWatch2() {return _literals[_watch2];}
+        Literal* GetWatch1() {return _literals[_watchIdx1];}
+        Literal* GetWatch2() {return _literals[_watchIdx2];}
     protected:
         bool IsBothUnsat() {return GetWatch1()->IsUnsat() &&
                                    GetWatch2()->IsUnsat();}
-        unsigned int FindNextUnassignedLiteral(unsigned int start);
+        unsigned int GetNextWatchIdx(unsigned int startIdx);
+        bool IsNeedUpdate(Literal* literalToBeUpdated);
     protected:
-        unsigned int _watch1;
-        unsigned int _watch2;
+        unsigned int _watchIdx1;
+        unsigned int _watchIdx2;
 };
 
 #endif

@@ -4,33 +4,49 @@ void Clause2Watch::Setup2Watch() {
     if (_literals.size() == 0) {
         assert(0);
     } else if (_literals.size() == 1) {
-        _watch1 = 0;
-        _watch2 = 0;
+        _watchIdx1 = 0;
+        _watchIdx2 = 0;
     } else {
-        _watch1 = 0;
-        _watch2 = 1;
+        _watchIdx1 = 0;
+        _watchIdx2 = 1;
     }
 }
 
 void Clause2Watch::Update2Watch(Literal* lit) {
-    if (lit != GetWatch1() && lit != GetWatch2()) {
+    if (! IsNeedUpdate(lit)) {
         return;
-    } else if (lit == GetWatch1()) {
-        _watch1 = FindNextUnassignedLiteral(_watch1);
+    }
+
+    if (lit == GetWatch1()) {
+        _watchIdx1 = GetNextWatchIdx(_watchIdx1);
     } else if (lit == GetWatch2()) {
-        _watch2 = FindNextUnassignedLiteral(_watch2);
+        _watchIdx2 = GetNextWatchIdx(_watchIdx2);
+    } else {
+        assert(0);
     }
 }
 
-unsigned int Clause2Watch::FindNextUnassignedLiteral(unsigned int start) {
+bool Clause2Watch::IsNeedUpdate(Literal* lit) {
+    if (lit->IsSat()) {
+        return false;
+    }
+
+    if (lit != GetWatch1() && lit != GetWatch2()) {
+        return false;
+    }
+
+    return true;
+}
+
+unsigned int Clause2Watch::GetNextWatchIdx(unsigned int start) {
     for (unsigned int i = start + 1 ; i < _literals.size() ; i++) {
-        if (! _literals[i]->GetVariable()->IsAssigned()) {
+        if (! _literals[i]->IsUnsat()) {
             return i;
         }
     }
 
     for (unsigned int i = 0 ; i < start ; i++) {
-        if (! _literals[i]->GetVariable()->IsAssigned()) {
+        if (! _literals[i]->IsUnsat()) {
             return i;
         }
     }
