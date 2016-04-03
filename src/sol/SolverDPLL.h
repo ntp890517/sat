@@ -11,12 +11,20 @@
 #include <list>
 #include <queue>
 #include <vector>
+#include <iterator>
 
 typedef unsigned int Level;
 
 using namespace std;
 
-class ImplicationGraph;
+class ImplicationGraph {
+    public:
+        void AddDecide(Literal* decide) { _decides.push_back(decide); }
+        unsigned int GetCurrentLevel() { return _decides.size() - 1; }
+    private:
+        bool BCP();
+        vector<Literal*> _decides;
+};
 
 class SolverDPLL : public Solver {
     friend class ImplicationGraph;
@@ -42,46 +50,7 @@ class SolverDPLL : public Solver {
         vector<Clause2Watch*> _clauses;
         vector<Variable*> _variables;
 
-        //ImplicationGraph _impGraph;
-};
-
-class ImplicationGraphEdge;
-
-class ImplicationGraphNode {
-    public:
-        ImplicationGraphNode(Literal* decide) : _lit(decide),
-                                                _flag1(false),
-                                                _flag2(false) {};
-
-        void SetFlag1() {_flag1 = true;}
-        void UnsetFlag1() {_flag1 = true;}
-
-        void SetFlag2() {_flag2 = true;}
-        void UnsetFlag2() {_flag2 = true;}
-    private:
-        Literal* _lit;
-        list<ImplicationGraphEdge*> _edges;
-        bool _flag1;
-        bool _flag2;
-};
-
-class ImplicationGraphEdge {
-    public:
-        ImplicationGraphEdge(Clause2Watch* cl) : _clause(cl) {};
-    private:
-        Clause2Watch* _clause;
-        ImplicationGraphNode* _node;
-};
-
-class ImplicationGraph {
-    public:
-        void AddDecide(Literal* decide) {
-            _decides.push_back(new ImplicationGraphNode(decide));
-        }
-        unsigned int GetCurrentLevel() {return _decides.size() - 1;}
-    private:
-        bool BCP();
-        vector<ImplicationGraphNode*> _decides;
+        ImplicationGraph _impGraph;
 };
 
 #endif

@@ -4,6 +4,7 @@
 #include "Clause.h"
 
 class Clause2Watch : public Clause {
+    public:
         void Setup2Watch();
         void Update2Watch(Literal* literalToBeUpdated);
 
