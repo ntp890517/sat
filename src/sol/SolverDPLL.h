@@ -20,9 +20,10 @@ using namespace std;
 class ImplicationGraph {
     public:
         void AddDecide(Literal* decide) { _decides.push_back(decide); }
+        bool BCP();
+        Level ConflictAnalyze();
         unsigned int GetCurrentLevel() { return _decides.size() - 1; }
     private:
-        bool BCP();
         vector<Literal*> _decides;
 };
 
