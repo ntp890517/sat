@@ -175,13 +175,13 @@ bool ImplicationGraph::BCP() {
             }  else if (cl->GetWatch1()->IsUnsat()) {
                 compLit = cl->GetWatch2()->GetComplementLiteral();
                 impLits.push(compLit);
-                lit->PushChildImpEdge(cl);
-                cl->PushChildImpNode(compLit);
+                lit->PushImpOutEdge(cl);
+                cl->PushImpOutNode(compLit);
             } else if (cl->GetWatch2()->IsUnsat()) {
                 compLit = cl->GetWatch1()->GetComplementLiteral();
                 impLits.push(compLit);
-                lit->PushChildImpEdge(cl);
-                cl->PushChildImpNode(compLit);
+                lit->PushImpOutEdge(cl);
+                cl->PushImpOutNode(compLit);
             } else {
                 continue;
             }

@@ -38,7 +38,8 @@ class Literal {
         void AddClause(Clause* clause) {_clauses.push_back(clause);}
         bool HasNoRelatedClauses() {return _clauses.empty();}
 
-        void PushChildImpEdge(Clause* cl) {_impEdges.push_back(cl);}
+        void PushImpOutEdge(Clause* cl) {_impOutEdges.push_back(cl);}
+        void PushImpInEdge(Clause* cl) {_impInEdges.push_back(cl);}
 
         void SetFlag1() {_flag1 = true;}
         void UnsetFlag1() {_flag1 = false;}
@@ -52,7 +53,8 @@ class Literal {
         bool      _sign;
         list<Clause*> _clauses;
 
-        list<Clause*> _impEdges;
+        list<Clause*> _impOutEdges;
+        list<Clause*> _impInEdges;
 
         bool _flag1;
         bool _flag2;
