@@ -79,6 +79,19 @@ ClauseDPLL* SolverDPLL::ParseClause(string s) {
     return c;
 }
 
+LiteralDPLL* SolverDPLL::Decide() {
+    Variable* v;
+    
+    for (unsigned int i = 1 ; i < _variables.size() ; i++) {
+        v = _variables[i];
+        if (! v->IsAssigned()) {
+            return static_cast<LiteralDPLL*>(v->GetPosLit());
+        }
+    }
+
+    return NULL;
+}
+
 // ImplicationGraph
 //bool ImplicationGraph::BCP() {
 //    Literal* lit = _decides.back();
