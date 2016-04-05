@@ -31,24 +31,7 @@ class Clause {
         }
 
         virtual string GetString();
-
-        void PushImpOutNode(Literal* lit) {_impOutNodes.push_back(lit);}
-        void PushImpInNode(Literal* lit) {_impInNodes.push_back(lit);}
-
-        void SetFlag1() {_flag1 = true;}
-        void UnsetFlag1() {_flag1 = false;}
-        bool IsFlag1() {return _flag1;}
-
-        void SetFlag2() {_flag2 = true;}
-        void UnsetFlag2() {_flag2 = false;}
-        bool IsFlag2() {return _flag2;}
     protected:
         vector<Literal*> _literals;
-
-        list<Literal*> _impOutNodes;
-        list<Literal*> _impInNodes;
-
-        bool _flag1;
-        bool _flag2;
 };
 #endif
