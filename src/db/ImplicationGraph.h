@@ -6,6 +6,8 @@ using namespace std;
 #include <list>
 #include <vector>
 
+class ImplicationGraphEdge;
+
 class ImplicationGraphNode {
     public:
         void SetIsTraversed1() {_isTraversed1 = true;}
@@ -36,7 +38,7 @@ class ImplicationGraphEdge {
         bool IsTraversed2() {return _isTraversed2;}
 
         void AddOutNodes(ImplicationGraphNode* n) {_outNodes.push_back(n);}
-        void AddInNodes(ImplicationGraphNode* n) {_inNOdes.push_back(n);}
+        void AddInNodes(ImplicationGraphNode* n) {_inNodes.push_back(n);}
     private:
         bool _isTraversed1;
         bool _isTraversed2;
@@ -47,9 +49,9 @@ class ImplicationGraphEdge {
 
 class ImplicationGraph {
     public:
-        void AddDecideNodes(ImplicationNode* n) {_decideNodes.push_back(n);}
+        void AddDecideNodes(ImplicationGraphNode* n) {_decideNodes.push_back(n);}
     private:
-        vector<ImplicationNode*> _decideNodes;
+        vector<ImplicationGraphNode*> _decideNodes;
 };
 
 #endif

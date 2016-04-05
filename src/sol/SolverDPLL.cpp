@@ -31,26 +31,8 @@ void SolverDPLL::ReadCnf(const string cnfName) {
     }
 }
 
-Clause2Watch* SolverDPLL::ParseClause(string s) {
-    int lit;
-    istringstream iss(s);
-    Clause2Watch *c = new Clause2Watch;
-    Literal *pLit = NULL;
-
-    while(iss >> lit) {
-        if (lit == 0) {
-            break;
-        } else if (lit > 0) {
-            pLit = _variables[lit]->GetPosLit();
-            c->Insert(pLit);
-            pLit->AddClause(c);
-        } else {
-            pLit = _variables[-lit]->GetNegLit();
-            c->Insert(pLit);
-            pLit->AddClause(c);
-        }
-    }
-    return c;
+void SolverDPLL::Solve() {
+    return;
 }
 
 string SolverDPLL::GetAssignment() { stringstream ss;
@@ -61,93 +43,40 @@ string SolverDPLL::GetAssignment() { stringstream ss;
     return ss.str();
 }
 
-void SolverDPLL::Solve()
-{
-    _result = Preprocess();
-
-    if (_result != UNDEF) {
-        return;
-    }
-    while(1) {
-        _result = Deduce(Decide());
-        if (_result == UNDEF) {
-            Level backToLevel = Analyze();
-            if (backToLevel < 0) {
-                _result = UNSAT;
-                return;
-            } else {
-                BackTrack(backToLevel);
-            }
-        } else if (_result == SAT) {
-            return;
-        }
-    }
-}
-
-void SolverDPLL::InitVariables(const unsigned int n) {
-    for (unsigned i = 0 ; i < n+1 ; i++) {
-        _variables.push_back(new Variable(i));
-        _variables.back()->InitLiterals<Literal>();
-    }
-}
-
 void SolverDPLL::Display() {
     for (unsigned i = 0 ; i < _clauses.size() ; i++) {
         cout << _clauses[i]->GetString() << endl;
     }
 }
 
-Solver::Result SolverDPLL::Preprocess()
-{
-    return Solver::UNDEF;
+void SolverDPLL::InitVariables(const unsigned int n) {
+    for (unsigned i = 0 ; i < n+1 ; i++) {
+        _variables.push_back(new Variable(i));
+        _variables.back()->InitLiterals<LiteralDPLL>();
+    }
 }
 
-Literal* SolverDPLL::Decide()
-{
-    for (unsigned int i = 0 ; i < _variables.size() ; i++) {
-        if (_variables[i]->IsAssigned()) {
-            continue;
-        }
+ClauseDPLL* SolverDPLL::ParseClause(string s) {
+    int lit;
+    istringstream iss(s);
+    ClauseDPLL *c = new ClauseDPLL;
+    LiteralDPLL *pLit = NULL;
 
-        if (_variables[i]->GetPosLit()->HasNoRelatedClauses()) {
-            _variables[i]->Assign(false);
-            return _variables[i]->GetNegLit();
+    while(iss >> lit) {
+        if (lit == 0) {
+            break;
+        } else if (lit > 0) {
+            pLit = static_cast<LiteralDPLL*>(_variables[lit]->GetPosLit());
+            c->Insert(pLit);
+        } else {
+            pLit = static_cast<LiteralDPLL*>(_variables[-lit]->GetNegLit());
+            c->Insert(pLit);
         }
-
-        if (_variables[i]->GetNegLit()->HasNoRelatedClauses()) {
-            _variables[i]->Assign(true);
-            return _variables[i]->GetPosLit();
-        }
-
-        _variables[i]->Assign(false);
-        return _variables[i]->GetNegLit();
     }
 
-    return NULL;
-}
-
-Solver::Result SolverDPLL::Deduce(Literal* lit)
-{
-    assert(lit);
-
-    queue<Literal*> assign;
-    //Literal* currAssign = lit;
-
-    do {
-        ;
-    } while (! assign.empty());
-
-    return Solver::UNDEF;
-}
-
-Level SolverDPLL::Analyze()
-{
-    return Solver::UNDEF;
-}
-
-void SolverDPLL::BackTrack(Level lv)
-{
-    ;
+    c->GetWatch1()->AddClause(c);
+    c->GetWatch2()->AddClause(c);
+    return c;
 }
 
 // ImplicationGraph

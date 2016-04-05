@@ -2,20 +2,29 @@
 #define SOLVERDPLL_H_
 
 #include "Solver.h"
+
 #include <iostream>
 #include <fstream>
-#include "../db/Clause2Watch.h"
-#include "../db/Literal.h"
-#include "../db/Variable.h"
-#include "../ut/ut.h"
+
 #include <list>
 #include <queue>
 #include <vector>
 #include <iterator>
 
+#include "../db/db.h"
+#include "../ut/ut.h"
+
 typedef unsigned int Level;
 
 using namespace std;
+
+class ClauseDPLL : public Clause2Watch, public ImplicationGraphEdge {
+};
+
+class LiteralDPLL : public Literal, public ImplicationGraphNode {
+    public:
+        LiteralDPLL(Variable *var, const bool sign) : Literal(var, sign) {};
+};
 
 class SolverDPLL : public Solver {
     friend class ImplicationGraph;
@@ -31,14 +40,14 @@ class SolverDPLL : public Solver {
         void Display();
     private:
         void InitVariables(unsigned int);
-        Clause2Watch* ParseClause(string s);
-        Solver::Result Preprocess();
-        Literal* Decide();
-        Solver::Result Deduce(Literal*);
-        Level Analyze();
-        void BackTrack(Level lv);
+        ClauseDPLL* ParseClause(string s);
+        //Solver::Result Preprocess();
+        //Literal* Decide();
+        //Solver::Result Deduce(Literal*);
+        //Level Analyze();
+        //void BackTrack(Level lv);
     private:
-        vector<Clause2Watch*> _clauses;
+        vector<ClauseDPLL*> _clauses;
         vector<Variable*> _variables;
 };
 

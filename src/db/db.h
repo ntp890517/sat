@@ -1,0 +1,5 @@
+#include "Clause.h"
+#include "Clause2Watch.h"
+#include "Variable.h"
+#include "Literal.h"
+#include "ImplicationGraph.h"
