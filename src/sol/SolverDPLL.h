@@ -17,16 +17,6 @@ typedef unsigned int Level;
 
 using namespace std;
 
-class ImplicationGraph {
-    public:
-        void AddDecide(Literal* decide) { _decides.push_back(decide); }
-        bool BCP();
-        Level ConflictAnalyze();
-        unsigned int GetCurrentLevel() { return _decides.size() - 1; }
-    private:
-        vector<Literal*> _decides;
-};
-
 class SolverDPLL : public Solver {
     friend class ImplicationGraph;
 
@@ -50,8 +40,6 @@ class SolverDPLL : public Solver {
     private:
         vector<Clause2Watch*> _clauses;
         vector<Variable*> _variables;
-
-        ImplicationGraph _impGraph;
 };
 
 #endif

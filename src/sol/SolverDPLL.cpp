@@ -151,50 +151,50 @@ void SolverDPLL::BackTrack(Level lv)
 }
 
 // ImplicationGraph
-bool ImplicationGraph::BCP() {
-    Literal* lit = _decides.back();
-    Variable* var = lit->GetVariable();
-    Literal* compLit = (lit->IsPos()? var->GetNegLit() : var->GetPosLit());
-    Clause2Watch* cl;
-    list<Clause*>::iterator cit;
-    queue<Literal*> impLits;
-
-    impLits.push(compLit);
-
-    while (! impLits.empty()) {
-        lit = impLits.front();
-        impLits.pop();
-        for (cit = lit->_clauses.begin() ; cit != lit->_clauses.end() ; cit++) {
-            cl = dynamic_cast<Clause2Watch*>(*cit);
-            cl->Update2Watch(lit);
-
-            if (cl->GetWatch1()->IsSat() || cl->GetWatch2()->IsSat()) {
-                continue;
-            } else if (cl->GetWatch1()->IsUnsat() && cl->GetWatch2()->IsUnsat()) {
-                return false;
-            }  else if (cl->GetWatch1()->IsUnsat()) {
-                compLit = cl->GetWatch2()->GetComplementLiteral();
-                impLits.push(compLit);
-                lit->PushImpOutEdge(cl);
-                cl->PushImpOutNode(compLit);
-            } else if (cl->GetWatch2()->IsUnsat()) {
-                compLit = cl->GetWatch1()->GetComplementLiteral();
-                impLits.push(compLit);
-                lit->PushImpOutEdge(cl);
-                cl->PushImpOutNode(compLit);
-            } else {
-                continue;
-            }
-        }
-    }
-
-    return true;
-}
-
-Level ImplicationGraph::ConflictAnalyze() {
-    //Literal* lit = _decides.back();
-    return 0;
-}
+//bool ImplicationGraph::BCP() {
+//    Literal* lit = _decides.back();
+//    Variable* var = lit->GetVariable();
+//    Literal* compLit = (lit->IsPos()? var->GetNegLit() : var->GetPosLit());
+//    Clause2Watch* cl;
+//    list<Clause*>::iterator cit;
+//    queue<Literal*> impLits;
+//
+//    impLits.push(compLit);
+//
+//    while (! impLits.empty()) {
+//        lit = impLits.front();
+//        impLits.pop();
+//        for (cit = lit->_clauses.begin() ; cit != lit->_clauses.end() ; cit++) {
+//            cl = dynamic_cast<Clause2Watch*>(*cit);
+//            cl->Update2Watch(lit);
+//
+//            if (cl->GetWatch1()->IsSat() || cl->GetWatch2()->IsSat()) {
+//                continue;
+//            } else if (cl->GetWatch1()->IsUnsat() && cl->GetWatch2()->IsUnsat()) {
+//                return false;
+//            }  else if (cl->GetWatch1()->IsUnsat()) {
+//                compLit = cl->GetWatch2()->GetComplementLiteral();
+//                impLits.push(compLit);
+//                lit->PushImpOutEdge(cl);
+//                cl->PushImpOutNode(compLit);
+//            } else if (cl->GetWatch2()->IsUnsat()) {
+//                compLit = cl->GetWatch1()->GetComplementLiteral();
+//                impLits.push(compLit);
+//                lit->PushImpOutEdge(cl);
+//                cl->PushImpOutNode(compLit);
+//            } else {
+//                continue;
+//            }
+//        }
+//    }
+//
+//    return true;
+//}
+//
+//Level ImplicationGraph::ConflictAnalyze() {
+//    //Literal* lit = _decides.back();
+//    return 0;
+//}
 
 
 
