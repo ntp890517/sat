@@ -12,9 +12,9 @@ void Clause2Watch::Setup2Watch() {
     }
 }
 
-void Clause2Watch::Update2Watch(Literal* lit) {
+Literal* Clause2Watch::Update2Watch(Literal* lit) {
     if (! IsNeedUpdate(lit)) {
-        return;
+        return NULL;
     }
 
     if (lit == GetWatch1()) {
@@ -25,6 +25,13 @@ void Clause2Watch::Update2Watch(Literal* lit) {
         assert(0);
     }
 
+    if (GetWatch1()->IsUnsat() && ! GetWatch2()->IsUnsat()) {
+        return GetWatch2();
+    } else if (! GetWatch1()->IsUnsat() && GetWatch2()->IsUnsat()) {
+        return GetWatch1();
+    } else {
+        return NULL;
+    }
 }
 
 bool Clause2Watch::IsNeedUpdate(Literal* lit) {
@@ -46,14 +53,10 @@ bool Clause2Watch::IsNeedUpdate(Literal* lit) {
 }
 
 unsigned int Clause2Watch::GetNextWatchIdx(unsigned int start) {
-    for (unsigned int i = start + 1 ; i < _literals.size() ; i++) {
-        if (! _literals[i]->IsUnsat()) {
-            return i;
-        }
-    }
-
-    for (unsigned int i = 0 ; i < start ; i++) {
-        if (! _literals[i]->IsUnsat()) {
+    for (unsigned int i = 0 ; i < _literals.size() ; i++) {
+        if (! _literals[i]->IsUnsat() &&
+            _literals[i] != GetWatch1() &&
+            _literals[i] != GetWatch2() ) {
             return i;
         }
     }
