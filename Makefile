@@ -6,7 +6,7 @@ LD_FLAGS = -g -std=c++11
 
 MAIN = src/main/main.cpp
 TEST = src/main/clauseTest.cpp
-MODULES = db sol 
+MODULES = db sol test
 MOD_DIRS = $(addprefix src/,$(MODULES))
 CPP_FILES = $(foreach mod_dir,$(MOD_DIRS),$(wildcard $(mod_dir)/*.cpp))
 OBJS = $(CPP_FILES:.cpp=.o)

@@ -1,5 +1,6 @@
 #include "../db/Clause.h"
 #include "../db/Clause2Watch.h"
+#include "../test/Test.h"
 #include <iostream>
 
 using namespace std;
@@ -20,38 +21,52 @@ int main() {
     c->Insert(var2->GetNegLit());
     c->Insert(var3->GetPosLit());
 
-    cout << "Clause = ( 1 -2 3 )" << endl;
+    Test clsTest("Clause (1 -2 3)");
     
-    cout << "[TEST] GetString()" << endl;
-    cout << c->GetString() << endl;
+    clsTest.TEST_BEGIN("GetString()");
+    clsTest.TEST_EQUAL(string("1 -2 3"), c->GetString());
+    clsTest.TEST_END();
 
-    cout << "[TEST] GetSize()" << endl;
-    cout << c->GetSize() << endl;
+    clsTest.TEST_BEGIN("GetSize()");
+    clsTest.TEST_EQUAL(3, int(c->GetSize()));
+    clsTest.TEST_END();
 
-    cout << "[TEST] Get(0)" << endl;
-    cout << c->Get(0)->GetNumeric() << endl;
+    clsTest.TEST_BEGIN("Get(0)");
+    clsTest.TEST_EQUAL(1, c->Get(0)->GetNumeric());
+    clsTest.TEST_END();
+
+    clsTest.REPORT();
 
     Clause2Watch* c2w = new Clause2Watch();
     c2w->Insert(var1->GetPosLit());
     c2w->Insert(var2->GetNegLit());
     c2w->Insert(var3->GetPosLit());
 
-    cout << "Clause2Watch = (1 -2 3)" << endl;
+    Test c2wTest("Clause2Watch (1 -2 3)");
+
     c2w->Setup2Watch();
 
-    cout << "[TEST] Original (w1, w2)" << endl;
-    cout << c2w->GetWatch1()->GetString() << ", " << c2w->GetWatch2()->GetString() << endl;
+    c2wTest.TEST_BEGIN("watch1");
+    c2wTest.TEST_EQUAL(1, c2w->GetWatch1()->GetNumeric());
+    c2wTest.TEST_END();
 
-    cout << "[TEST] 1=F (w1, w2)" << endl;
+    c2wTest.TEST_BEGIN("watch2");
+    c2wTest.TEST_EQUAL(-2, c2w->GetWatch2()->GetNumeric());
+    c2wTest.TEST_END();
+
+    c2wTest.TEST_BEGIN("watch1 update");
     var1->Assign(false);
     c2w->Update2Watch(var1->GetPosLit());
-    cout << c2w->GetWatch1()->GetString() << ", " << c2w->GetWatch2()->GetString() << endl;
+    c2wTest.TEST_EQUAL(3, c2w->GetWatch1()->GetNumeric());
+    c2wTest.TEST_END();
 
-    cout << "[TEST] 2=T (w1, w2)" << endl;
+    c2wTest.TEST_BEGIN("imply");
     var2->Assign(true);
     Literal * impLit = c2w->Update2Watch(var2->GetNegLit());
-    cout << c2w->GetWatch1()->GetString() << ", " << c2w->GetWatch2()->GetString() << endl;
-    cout << "imply: " << impLit->GetString() << endl;
+    c2wTest.TEST_EQUAL(3, impLit->GetNumeric());
+    c2wTest.TEST_END();
+
+    c2wTest.REPORT();
 
     return 0;
 }
