@@ -35,6 +35,12 @@ bool Clause2Watch::IsNeedUpdate(Literal* lit) {
         return false;
     }
 
+    if (GetWatch1()->IsSat() || GetWatch2()->IsSat()) {
+        return false;
+    }
+
+    assert(! GetWatch1()->IsUnsat() || ! GetWatch2()->IsUnsat());
+
     return true;
 }
 
