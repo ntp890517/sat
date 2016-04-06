@@ -24,6 +24,7 @@ void Clause2Watch::Update2Watch(Literal* lit) {
     } else {
         assert(0);
     }
+
 }
 
 bool Clause2Watch::IsNeedUpdate(Literal* lit) {
