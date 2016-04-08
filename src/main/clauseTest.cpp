@@ -24,7 +24,7 @@ int main() {
     Test clsTest("Clause (1 -2 3)");
     
     clsTest.TEST_BEGIN("GetString()");
-    clsTest.TEST_EQUAL(string("1 -2 3"), c->GetString());
+    clsTest.TEST_EQUAL("1 -2 3", c->GetString());
     clsTest.TEST_END();
 
     clsTest.TEST_BEGIN("GetSize()");

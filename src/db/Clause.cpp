@@ -7,7 +7,10 @@ string Clause::GetString() {
     string s;
     for (unsigned int i = 0 ; i < _literals.size() ; i++) {
         s += _literals[i]->GetString();
-        s += ' ';
+
+        if (i != _literals.size() - 1) {
+            s += ' ';
+        }
     }
     return s;
 }
