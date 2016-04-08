@@ -12,14 +12,14 @@ void Clause2Watch::Setup2Watch() {
     }
 }
 
-Literal* Clause2Watch::Update2Watch(Literal* lit) {
-    if (! IsNeedUpdate(lit)) {
+Literal* Clause2Watch::Deduce(Literal* assign) {
+    if (! IsNeedUpdate(assign)) {
         return NULL;
     }
 
-    if (lit == GetWatch1()) {
+    if (assign == GetWatch1()) {
         _watchIdx1 = GetNextWatchIdx(_watchIdx1);
-    } else if (lit == GetWatch2()) {
+    } else if (assign == GetWatch2()) {
         _watchIdx2 = GetNextWatchIdx(_watchIdx2);
     } else {
         assert(0);

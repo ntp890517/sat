@@ -49,7 +49,7 @@ class ImplicationGraphEdge {
 
 class ImplicationGraph {
     public:
-        void AddDecideNodes(ImplicationGraphNode* n) {_decideNodes.push_back(n);}
+        void AddDecideNode(ImplicationGraphNode* n) {_decideNodes.push_back(n);}
     private:
         vector<ImplicationGraphNode*> _decideNodes;
 };

@@ -42,13 +42,15 @@ class SolverDPLL : public Solver {
         void InitVariables(unsigned int);
         ClauseDPLL* ParseClause(string s);
         //Solver::Result Preprocess();
+        unsigned int BCP(LiteralDPLL* assign);
         LiteralDPLL* Decide();
         //Solver::Result Deduce(Literal*);
-        //Level Analyze();
         //void BackTrack(Level lv);
     private:
         vector<ClauseDPLL*> _clauses;
         vector<Variable*> _variables;
+
+        ImplicationGraph _impGraph;
 };
 
 #endif

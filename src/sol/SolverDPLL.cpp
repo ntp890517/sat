@@ -92,8 +92,9 @@ LiteralDPLL* SolverDPLL::Decide() {
     return NULL;
 }
 
-// ImplicationGraph
-//bool ImplicationGraph::BCP() {
+unsigned int SolverDPLL::BCP(LiteralDPLL* assign) {
+    _impGraph.AddDecideNode(assign);
+
 //    Literal* lit = _decides.back();
 //    Variable* var = lit->GetVariable();
 //    Literal* compLit = (lit->IsPos()? var->GetNegLit() : var->GetPosLit());
@@ -129,16 +130,7 @@ LiteralDPLL* SolverDPLL::Decide() {
 //            }
 //        }
 //    }
-//
-//    return true;
-//}
-//
-//Level ImplicationGraph::ConflictAnalyze() {
-//    //Literal* lit = _decides.back();
-//    return 0;
-//}
 
-
-
-
+    return 0;
+}
 

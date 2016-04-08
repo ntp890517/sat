@@ -6,7 +6,7 @@
 class Clause2Watch : public Clause {
     public:
         void Setup2Watch();
-        Literal* Update2Watch(Literal* literalToBeUpdated);
+        Literal* Deduce(Literal* assign);
 
         Literal* GetWatch1() {return _literals[_watchIdx1];}
         Literal* GetWatch2() {return _literals[_watchIdx2];}
