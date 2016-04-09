@@ -17,10 +17,21 @@ Literal* Clause2Watch::Deduce(Literal* assign) {
         return NULL;
     }
 
+    unsigned int newWatchIdx;
     if (assign == GetWatch1()) {
-        _watchIdx1 = GetNextWatchIdx(_watchIdx1);
+        newWatchIdx = GetNextWatchIdx(_watchIdx1);
+        if (newWatchIdx != _watchIdx1) {
+            GetWatch1()->RemoveClause(this);
+            this->Get(newWatchIdx)->AddClause(this);
+            _watchIdx1 = newWatchIdx;
+        }
     } else if (assign == GetWatch2()) {
-        _watchIdx2 = GetNextWatchIdx(_watchIdx2);
+        newWatchIdx = GetNextWatchIdx(_watchIdx2);
+        if (newWatchIdx != _watchIdx2) {
+            GetWatch2()->RemoveClause(this);
+            this->Get(newWatchIdx)->AddClause(this);
+            _watchIdx2 = newWatchIdx;
+        }
     } else {
         assert(0);
     }

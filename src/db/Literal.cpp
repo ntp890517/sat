@@ -28,3 +28,8 @@ int Literal::GetNumeric() {
     return (IsPos()? GetVariable()->GetNumeric() : 
                      -GetVariable()->GetNumeric());
 }
+
+void Literal::ReplaceClause(Clause* from, Clause* to) {
+    _clauses.remove(from);
+    _clauses.push_back(to);
+}

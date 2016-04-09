@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <list>
+#include <iterator>
 
 #include "Variable.h"
 
@@ -33,6 +34,8 @@ class Literal {
         int GetNumeric();
 
         void AddClause(Clause* clause) {_clauses.push_back(clause);}
+        void RemoveClause(Clause* clause) {_clauses.remove(clause);}
+        void ReplaceClause(Clause* from, Clause* to);
         bool HasNoRelatedClauses() {return _clauses.empty();}
     protected:
         Variable *_var;
