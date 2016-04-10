@@ -92,45 +92,46 @@ LiteralDPLL* SolverDPLL::Decide() {
     return NULL;
 }
 
-unsigned int SolverDPLL::BCP(LiteralDPLL* assign) {
+bool SolverDPLL::BCP(LiteralDPLL* assign) {
     _impGraph.AddDecideNode(assign);
 
-//    Literal* lit = _decides.back();
-//    Variable* var = lit->GetVariable();
-//    Literal* compLit = (lit->IsPos()? var->GetNegLit() : var->GetPosLit());
-//    Clause2Watch* cl;
-//    list<Clause*>::iterator cit;
-//    queue<Literal*> impLits;
-//
-//    impLits.push(compLit);
-//
-//    while (! impLits.empty()) {
-//        lit = impLits.front();
-//        impLits.pop();
-//        for (cit = lit->_clauses.begin() ; cit != lit->_clauses.end() ; cit++) {
-//            cl = dynamic_cast<Clause2Watch*>(*cit);
-//            cl->Update2Watch(lit);
-//
-//            if (cl->GetWatch1()->IsSat() || cl->GetWatch2()->IsSat()) {
-//                continue;
-//            } else if (cl->GetWatch1()->IsUnsat() && cl->GetWatch2()->IsUnsat()) {
-//                return false;
-//            }  else if (cl->GetWatch1()->IsUnsat()) {
-//                compLit = cl->GetWatch2()->GetComplementLiteral();
-//                impLits.push(compLit);
-//                lit->PushImpOutEdge(cl);
-//                cl->PushImpOutNode(compLit);
-//            } else if (cl->GetWatch2()->IsUnsat()) {
-//                compLit = cl->GetWatch1()->GetComplementLiteral();
-//                impLits.push(compLit);
-//                lit->PushImpOutEdge(cl);
-//                cl->PushImpOutNode(compLit);
-//            } else {
-//                continue;
-//            }
-//        }
-//    }
+    queue<LiteralDPLL*> impLits;
+    LiteralDPLL* lit;
+    LiteralDPLL* compLit;
+    LiteralDPLL* impLit;
+    list<Clause*>::iterator cit;
+    ClauseDPLL* cls;
 
-    return 0;
+    impLits.push(assign);
+
+    while (! impLits.empty()) {
+        lit = impLits.front();
+        impLits.pop();
+        compLit = static_cast<LiteralDPLL*>(lit->GetComplementLiteral());
+
+        for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
+            cls = static_cast<ClauseDPLL*>(*cit);
+            impLit = static_cast<LiteralDPLL*>(cls->Deduce(lit));
+            if (impLit->IsUnsat()) {
+                impLit->AddOutEdge(_impGraph.GetConflictEdge());
+                static_cast<LiteralDPLL*>(impLit->GetComplementLiteral())->AddOutEdge(_impGraph.GetConflictEdge());
+                _impGraph.GetConflictEdge()->AddInNode(impLit);
+                _impGraph.GetConflictEdge()->AddInNode(static_cast<LiteralDPLL*>(impLit->GetComplementLiteral()));
+                _impGraph.GetConflictEdge()->AddOutNode(_impGraph.GetConflictNode());
+                _impGraph.GetConflictNode()->AddInEdge(_impGraph.GetConflictEdge());
+                return false;
+            } else if (impLit) {
+                impLits.push(impLit);
+                lit->AddOutEdge(cls);
+                cls->AddInNode(lit);
+                cls->AddOutNode(impLit);
+                impLit->AddInEdge(cls);
+            } else {
+                continue;
+            }
+        }
+    }
+
+    return true;
 }
 

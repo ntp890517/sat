@@ -42,7 +42,7 @@ class SolverDPLL : public Solver {
         void InitVariables(unsigned int);
         ClauseDPLL* ParseClause(string s);
         //Solver::Result Preprocess();
-        unsigned int BCP(LiteralDPLL* assign);
+        bool BCP(LiteralDPLL* assign);
         LiteralDPLL* Decide();
         //Solver::Result Deduce(Literal*);
         //void BackTrack(Level lv);

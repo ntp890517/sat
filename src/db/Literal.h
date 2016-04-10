@@ -37,6 +37,9 @@ class Literal {
         void RemoveClause(Clause* clause) {_clauses.remove(clause);}
         void ReplaceClause(Clause* from, Clause* to);
         bool HasNoRelatedClauses() {return _clauses.empty();}
+
+        list<Clause*>::iterator GetClausesBegin() {return _clauses.begin();}
+        list<Clause*>::iterator GetClausesEnd() {return _clauses.end();}
     protected:
         Variable *_var;
         bool      _sign;
