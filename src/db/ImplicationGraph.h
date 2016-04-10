@@ -55,6 +55,8 @@ class ImplicationGraph {
     public:
         void AddDecideNode(ImplicationGraphNode* n) {_decideNodes.push_back(n);}
 
+        void Conflict(ImplicationGraphNode *n1, ImplicationGraphNode *n2);
+
         ImplicationGraphNode* GetConflictNode() {return &_conflictNode;}
         ImplicationGraphEdge* GetConflictEdge() {return &_conflictEdge;}
     private:

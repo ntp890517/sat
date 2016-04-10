@@ -107,18 +107,13 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
     while (! impLits.empty()) {
         lit = impLits.front();
         impLits.pop();
-        compLit = static_cast<LiteralDPLL*>(lit->GetComplementLiteral());
+        compLit = lit->GetComplementLiteral();
 
         for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
             cls = static_cast<ClauseDPLL*>(*cit);
-            impLit = static_cast<LiteralDPLL*>(cls->Deduce(lit));
+            impLit = cls->Deduce(lit);
             if (impLit->IsUnsat()) {
-                impLit->AddOutEdge(_impGraph.GetConflictEdge());
-                static_cast<LiteralDPLL*>(impLit->GetComplementLiteral())->AddOutEdge(_impGraph.GetConflictEdge());
-                _impGraph.GetConflictEdge()->AddInNode(impLit);
-                _impGraph.GetConflictEdge()->AddInNode(static_cast<LiteralDPLL*>(impLit->GetComplementLiteral()));
-                _impGraph.GetConflictEdge()->AddOutNode(_impGraph.GetConflictNode());
-                _impGraph.GetConflictNode()->AddInEdge(_impGraph.GetConflictEdge());
+                _impGraph.Conflict(impLit, impLit->GetComplementLiteral());
                 return false;
             } else if (impLit) {
                 impLits.push(impLit);

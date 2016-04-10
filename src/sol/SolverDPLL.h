@@ -18,12 +18,19 @@ typedef unsigned int Level;
 
 using namespace std;
 
-class ClauseDPLL : public Clause2Watch, public ImplicationGraphEdge {
-};
-
 class LiteralDPLL : public Literal, public ImplicationGraphNode {
     public:
         LiteralDPLL(Variable *var, const bool sign) : Literal(var, sign) {};
+        LiteralDPLL* GetComplementLiteral() {
+            return static_cast<LiteralDPLL*>(Literal::GetComplementLiteral());
+        }
+};
+
+class ClauseDPLL : public Clause2Watch, public ImplicationGraphEdge {
+    public:
+        LiteralDPLL* Deduce(LiteralDPLL* assign) {
+            return static_cast<LiteralDPLL*>(Clause2Watch::Deduce(assign));
+        }
 };
 
 class SolverDPLL : public Solver {
