@@ -130,3 +130,37 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
     return true;
 }
 
+void SolverDPLL::BackTrack(unsigned int backToLv) {
+    LiteralDPLL* node;
+    LiteralDPLL* nextNode;
+    ImplicationGraphEdge* edge;
+    queue<LiteralDPLL*> nodeQueue;
+
+    for (unsigned int lvl = backToLv ; lvl <= _impGraph.GetCurrentLevel() ; lvl++) {
+        nodeQueue.push(static_cast<LiteralDPLL*>(_impGraph.GetDecideNode(lvl)));
+        while (! nodeQueue.empty()) {
+            node = nodeQueue.back();
+            nodeQueue.pop();
+
+            node->GetVariable()->Unassign();
+            while (true) {
+                edge = node->GetFrontOutEdge();
+                if (! edge) {
+                    break;
+                }
+                while (true) {
+                    nextNode = static_cast<LiteralDPLL*>(edge->GetFrontOutNode());
+                    if (! nextNode) {
+                        break;
+                    }
+                    nodeQueue.push(nextNode);
+                }
+                edge->PurgeRelatedNodes();
+                node->PopFrontOutEdge();
+            }
+            node->PurgeRelatedEdges();
+        }
+    }
+}
+
+

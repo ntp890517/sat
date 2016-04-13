@@ -5,6 +5,7 @@ using namespace std;
 
 #include <list>
 #include <vector>
+#include <cassert>
 
 class ImplicationGraphEdge;
 
@@ -19,6 +20,14 @@ class ImplicationGraphNode {
 
         void AddOutEdge(ImplicationGraphEdge* e) {_outEdges.push_back(e);}
         void AddInEdge(ImplicationGraphEdge* e) {_inEdges.push_back(e);}
+
+        ImplicationGraphEdge* GetFrontOutEdge() {
+            return (_outEdges.empty()? nullptr : _outEdges.front());}
+        void PopFrontOutEdge() {_outEdges.pop_front();}
+
+        ImplicationGraphEdge* GetFrontInEdge() {
+            return (_inEdges.empty()? nullptr : _inEdges.front());}
+        void PopFrontInEdge() {_inEdges.pop_front();}
 
         void PurgeRelatedEdges() {_outEdges.clear(); _inEdges.clear();}
     private:
@@ -42,6 +51,14 @@ class ImplicationGraphEdge {
         void AddOutNode(ImplicationGraphNode* n) {_outNodes.push_back(n);}
         void AddInNode(ImplicationGraphNode* n) {_inNodes.push_back(n);}
 
+        ImplicationGraphNode* GetFrontOutNode() {
+            return (_outNodes.empty()? nullptr : _outNodes.front());}
+        void PopFrontOutNode() {_outNodes.pop_front();}
+
+        ImplicationGraphNode* GetFrontInNode() {
+            return (_inNodes.empty()? nullptr : _inNodes.front());}
+        void PopFrontInNode() {_inNodes.pop_front();}
+
         void PurgeRelatedNodes() {_outNodes.clear(); _inNodes.clear();}
     private:
         bool _isTraversed1;
@@ -54,6 +71,12 @@ class ImplicationGraphEdge {
 class ImplicationGraph {
     public:
         void AddDecideNode(ImplicationGraphNode* n) {_decideNodes.push_back(n);}
+        void PopBackDecideNode() {_decideNodes.pop_back();}
+        ImplicationGraphNode* GetDecideNode(unsigned int level) {
+            assert(level < _decideNodes.size());
+            return _decideNodes[level];}
+
+        unsigned int GetCurrentLevel() {return _decideNodes.size() - 1;}
 
         void Conflict(ImplicationGraphNode *n1, ImplicationGraphNode *n2);
 
