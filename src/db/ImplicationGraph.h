@@ -6,6 +6,7 @@ using namespace std;
 #include <list>
 #include <vector>
 #include <cassert>
+#include <iterator>
 
 class ImplicationGraphEdge;
 
@@ -18,6 +19,9 @@ class ImplicationGraphNode {
         void UnsetIsTraversed2() {_isTraversed2 = false;}
         bool IsTraversed2() {return _isTraversed2;}
 
+        void SetLevel( unsigned level) {_level = level;}
+        unsigned GetLevel() {return _level;}
+
         void AddOutEdge(ImplicationGraphEdge* e) {_outEdges.push_back(e);}
         void AddInEdge(ImplicationGraphEdge* e) {_inEdges.push_back(e);}
 
@@ -29,6 +33,22 @@ class ImplicationGraphNode {
             return (_inEdges.empty()? nullptr : _inEdges.front());}
         void PopFrontInEdge() {_inEdges.pop_front();}
 
+        list<ImplicationGraphEdge*>::iterator GetOutEdgesBegin() {
+            return _outEdges.begin();
+        }
+        list<ImplicationGraphEdge*>::iterator GetOutEdgesEnd() {
+            return _outEdges.end();
+        }
+
+        list<ImplicationGraphEdge*>::iterator GetInEdgesBegin() {
+            return _inEdges.begin();
+        }
+        list<ImplicationGraphEdge*>::iterator GetInEdgesEnd() {
+            return _inEdges.end();
+        }
+
+        void PurgeOutEdges() {_outEdges.clear();}
+        void PurgeInEdges() {_inEdges.clear();}
         void PurgeRelatedEdges() {_outEdges.clear(); _inEdges.clear();}
     private:
         bool _isTraversed1;
@@ -59,6 +79,22 @@ class ImplicationGraphEdge {
             return (_inNodes.empty()? nullptr : _inNodes.front());}
         void PopFrontInNode() {_inNodes.pop_front();}
 
+        list<ImplicationGraphNode*>::iterator GetOutNodesBegin() {
+            return _outNodes.begin();
+        }
+        list<ImplicationGraphNode*>::iterator GetOutNodesEnd() {
+            return _outNodes.end();
+        }
+
+        list<ImplicationGraphNode*>::iterator GetInNodesBegin() {
+            return _inNodes.begin();
+        }
+        list<ImplicationGraphNode*>::iterator GetInNodesEnd() {
+            return _inNodes.end();
+        }
+
+        void PurgeOutNodes() {_outNodes.clear();}
+        void PurgeInNodes() {_inNodes.clear();}
         void PurgeRelatedNodes() {_outNodes.clear(); _inNodes.clear();}
     private:
         bool _isTraversed1;

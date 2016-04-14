@@ -135,28 +135,23 @@ void SolverDPLL::BackTrack(unsigned int backToLv) {
     LiteralDPLL* nextNode;
     ImplicationGraphEdge* edge;
     queue<LiteralDPLL*> nodeQueue;
+    list<ImplicationGraphEdge*>::iterator eit;
+    list<ImplicationGraphNode*>::iterator nit;
 
     for (unsigned int lvl = backToLv ; lvl <= _impGraph.GetCurrentLevel() ; lvl++) {
         nodeQueue.push(static_cast<LiteralDPLL*>(_impGraph.GetDecideNode(lvl)));
         while (! nodeQueue.empty()) {
-            node = nodeQueue.back();
+            node = nodeQueue.front();
             nodeQueue.pop();
 
             node->GetVariable()->Unassign();
-            while (true) {
-                edge = node->GetFrontOutEdge();
-                if (! edge) {
-                    break;
-                }
-                while (true) {
-                    nextNode = static_cast<LiteralDPLL*>(edge->GetFrontOutNode());
-                    if (! nextNode) {
-                        break;
-                    }
+            for (eit = node->GetOutEdgesBegin() ; eit != node->GetOutEdgesEnd() ; eit++) {
+                edge = *eit;
+                for (nit = edge->GetOutNodesBegin() ; nit != edge->GetOutNodesEnd() ; nit++) {
+                    nextNode = static_cast<LiteralDPLL*>(*nit);
                     nodeQueue.push(nextNode);
                 }
                 edge->PurgeRelatedNodes();
-                node->PopFrontOutEdge();
             }
             node->PurgeRelatedEdges();
         }
