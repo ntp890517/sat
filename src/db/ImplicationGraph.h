@@ -8,17 +8,25 @@ using namespace std;
 #include <cassert>
 #include <iterator>
 
+class ImplicationGraphObj {
+    public:
+        void SetFlag1() {_flag1 = true;}
+        void UnsetFlag1() {_flag1 = false;}
+        bool Flag1() {return _flag1;}
+
+        void SetFlag2() {_flag2 = true;}
+        void UnsetFlag2() {_flag2 = false;}
+        bool Flag2() {return _flag2;}
+
+    private:
+        bool _flag1;
+        bool _flag2;
+};
+
 class ImplicationGraphEdge;
 
-class ImplicationGraphNode {
+class ImplicationGraphNode : public ImplicationGraphObj {
     public:
-        void SetIsTraversed1() {_isTraversed1 = true;}
-        void UnsetIsTraversed1() {_isTraversed1 = false;}
-        bool IsTraversed1() {return _isTraversed1;}
-        void SetIsTraversed2() {_isTraversed2 = true;}
-        void UnsetIsTraversed2() {_isTraversed2 = false;}
-        bool IsTraversed2() {return _isTraversed2;}
-
         void SetLevel( unsigned level) {_level = level;}
         unsigned GetLevel() {return _level;}
 
@@ -43,23 +51,14 @@ class ImplicationGraphNode {
         void PurgeInEdges() {_inEdges.clear();}
         void PurgeRelatedEdges() {_outEdges.clear(); _inEdges.clear();}
     private:
-        bool _isTraversed1;
-        bool _isTraversed2;
         unsigned _level;
 
         list<ImplicationGraphEdge*> _outEdges;
         list<ImplicationGraphEdge*> _inEdges;
 };
 
-class ImplicationGraphEdge {
+class ImplicationGraphEdge : public ImplicationGraphObj {
     public:
-        void SetIsTraversed1() {_isTraversed1 = true;}
-        void UnsetIsTraversed1() {_isTraversed1 = false;}
-        bool IsTraversed1() {return _isTraversed1;}
-        void SetIsTraversed2() {_isTraversed2 = true;}
-        void UnsetIsTraversed2() {_isTraversed2 = false;}
-        bool IsTraversed2() {return _isTraversed2;}
-
         void AddOutNode(ImplicationGraphNode* n) {_outNodes.push_back(n);}
         void AddInNode(ImplicationGraphNode* n) {_inNodes.push_back(n);}
 
@@ -81,9 +80,6 @@ class ImplicationGraphEdge {
         void PurgeInNodes() {_inNodes.clear();}
         void PurgeRelatedNodes() {_outNodes.clear(); _inNodes.clear();}
     private:
-        bool _isTraversed1;
-        bool _isTraversed2;
-
         list<ImplicationGraphNode*> _outNodes;
         list<ImplicationGraphNode*> _inNodes;
 };
@@ -99,6 +95,8 @@ class ImplicationGraph {
         unsigned int GetCurrentLevel() {return _decideNodes.size() - 1;}
 
         void Conflict(ImplicationGraphNode *n1, ImplicationGraphNode *n2);
+
+        ImplicationGraphNode* GetFirstUIP();
 
         ImplicationGraphNode* GetConflictNode() {return &_conflictNode;}
         ImplicationGraphEdge* GetConflictEdge() {return &_conflictEdge;}
