@@ -10,6 +10,8 @@ using namespace std;
 
 class ImplicationGraphObj {
     public:
+        void ResetFlags() {_flag1 = _flag2 = false;}
+
         void SetFlag1() {_flag1 = true;}
         void UnsetFlag1() {_flag1 = false;}
         bool Flag1() {return _flag1;}
@@ -50,6 +52,8 @@ class ImplicationGraphNode : public ImplicationGraphObj {
         void PurgeOutEdges() {_outEdges.clear();}
         void PurgeInEdges() {_inEdges.clear();}
         void PurgeRelatedEdges() {_outEdges.clear(); _inEdges.clear();}
+
+        bool IsAllOutEdgesFlag1();
     private:
         unsigned _level;
 
@@ -96,6 +100,7 @@ class ImplicationGraph {
 
         void Conflict(ImplicationGraphNode *n1, ImplicationGraphNode *n2);
 
+        void ResetFlags(unsigned int level);
         ImplicationGraphNode* GetFirstUIP();
 
         ImplicationGraphNode* GetConflictNode() {return &_conflictNode;}

@@ -5,6 +5,17 @@
 typedef ImplicationGraphEdge ImpEdge;
 typedef ImplicationGraphNode ImpNode;
 
+bool ImplicationGraphNode::IsAllOutEdgesFlag1() {
+    list<ImpEdge*>::iterator eit;
+
+    for (eit = _outEdges.begin() ; eit != _outEdges.end() ; eit++) {
+        if (! (*eit)->Flag1()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void ImplicationGraph::Conflict(ImpNode *n1, ImpNode *n2) {
     n1->AddOutEdge(&_conflictEdge);
     n2->AddOutEdge(&_conflictEdge);
@@ -14,22 +25,60 @@ void ImplicationGraph::Conflict(ImpNode *n1, ImpNode *n2) {
     _conflictNode.AddInEdge(&_conflictEdge);
 }
 
-ImpNode* ImplicationGraph::GetFirstUIP() {
-    return nullptr;
-}
-#if 0
-ImpNode* ImplicationGraph::GetFirstUIP() {
-    ImpNode* lastNode = _decideNodes.back();
+void ImplicationGraph::ResetFlags(unsigned int lvl) {
+    ImpNode* npt = GetDecideNode(lvl);
+    list<ImpEdge*>::iterator eit;
+    list<ImpNode*>::iterator nit;
     queue<ImpNode*> nodes;
-    ImpNode* npt;
 
-    nodes.push(lastNode);
+    nodes.push(npt);
 
     while (! nodes.empty()) {
         npt = nodes.front();
         nodes.pop();
-    }
 
-    return npt;
+        npt->ResetFlags();
+        for (eit = npt->GetOutEdgesBegin() ; eit != npt->GetOutEdgesEnd() ; eit++) { 
+            (*eit)->ResetFlags();
+            for (nit = (*eit)->GetOutNodesBegin() ; nit != (*eit)->GetOutNodesEnd() ; nit++) {
+                nodes.push(*nit);
+            }
+        }
+    }
 }
-#endif
+
+ImpNode* ImplicationGraph::GetFirstUIP() {
+    ResetFlags(GetCurrentLevel());
+
+    ImpNode* npt = GetConflictNode();
+    queue<ImpNode*> nodes;
+    list<ImpEdge*>::iterator eit;
+    list<ImpNode*>::iterator nit;
+
+    nodes.push(npt);
+    npt->SetFlag1();
+
+    do {
+        npt = nodes.front();
+        nodes.pop();
+
+        if (! npt->IsAllOutEdgesFlag1()) {
+            nodes.push(npt);
+            continue;
+        }
+
+        npt->SetFlag2();
+        for (eit = npt->GetInEdgesBegin() ; eit != npt->GetInEdgesEnd() ; eit++) {
+            for (nit = (*eit)->GetInNodesBegin() ; nit != (*eit)->GetInNodesEnd() ; nit++) {
+                if ((*nit)->Flag1()) {
+                    continue;
+                } else {
+                    nodes.push(*nit);
+                }
+            }
+            (*eit)->SetFlag1();
+        }
+    } while (nodes.size() != 1);
+
+    return nodes.front();
+}
