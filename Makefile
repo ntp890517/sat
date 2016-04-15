@@ -35,6 +35,8 @@ clean:
 regression:
 	@echo "\n[Run] sat.1.cnf"
 	@./$(EXEC) cases/tiny/sat.1.cnf
+	@echo "\n[Run] sat.2.cnf"
+	@./$(EXEC) cases/tiny/sat.2.cnf
 	@echo "\n[Run] unsat.cnf"
 	@./$(EXEC) cases/tiny/unsat.cnf
 	@echo "\n[Run] unsat.2.cnf"
