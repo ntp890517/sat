@@ -32,7 +32,28 @@ void SolverDPLL::ReadCnf(const string cnfName) {
 }
 
 void SolverDPLL::Solve() {
-    return;
+    Preprocess();
+
+    LiteralDPLL* assign;
+
+    while (1) {
+        assign = Decide();
+
+        if (! assign) {
+            _result = SAT;
+            return;
+        }
+
+        if (! BCP(assign)) {
+            unsigned backToLv = Analyze(); //TODO
+            if (backToLv  == 0) {
+                _result = UNSAT;
+                return;
+            } else {
+                BackTrack(backToLv);
+            }
+        }
+    }
 }
 
 string SolverDPLL::GetAssignment() { stringstream ss;
@@ -60,7 +81,7 @@ ClauseDPLL* SolverDPLL::ParseClause(string s) {
     int lit;
     istringstream iss(s);
     ClauseDPLL *c = new ClauseDPLL;
-    LiteralDPLL *pLit = NULL;
+    LiteralDPLL *pLit = nullptr;
 
     while(iss >> lit) {
         if (lit == 0) {
@@ -79,6 +100,17 @@ ClauseDPLL* SolverDPLL::ParseClause(string s) {
     return c;
 }
 
+void SolverDPLL::Preprocess() {
+    for (unsigned i = 0 ; i < _clauses.size() ; i++) {
+        if (_clauses[i]->GetSize() == 1) {
+            LiteralDPLL* lit = static_cast<LiteralDPLL*>(_clauses[i]->GetWatch1());
+            lit->GetVariable()->Assign(lit->GetSign());
+            lit->SetLevel(0);
+        }
+    }
+    _impGraph.AddDecideNode(nullptr);
+}
+
 LiteralDPLL* SolverDPLL::Decide() {
     Variable* v;
     
@@ -89,7 +121,7 @@ LiteralDPLL* SolverDPLL::Decide() {
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 bool SolverDPLL::BCP(LiteralDPLL* assign) {
@@ -107,12 +139,17 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
     while (! impLits.empty()) {
         lit = impLits.front();
         impLits.pop();
+
+        lit->GetVariable()->Assign(lit->GetSign());
+        lit->SetLevel(_impGraph.GetCurrentLevel());
         compLit = lit->GetComplementLiteral();
 
         for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
             cls = static_cast<ClauseDPLL*>(*cit);
             impLit = cls->Deduce(lit);
-            if (impLit->IsUnsat()) {
+            if (! impLit) {
+                continue;
+            } else if (impLit->IsUnsat()) {
                 _impGraph.Conflict(impLit, impLit->GetComplementLiteral());
                 return false;
             } else if (impLit) {
@@ -164,6 +201,17 @@ list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
     }
 
     return cut;
+}
+
+unsigned SolverDPLL::Analyze() {
+    list<ClauseDPLL*> uipCut = GetFirstUipCut();
+    list<ClauseDPLL*>::iterator cit;
+    //ClauseDPLL* lnCls = new ClauseDPLL;
+
+    for (cit = uipCut.begin() ; cit != uipCut.end() ; cit++) {
+        ;
+    }
+    return 0;
 }
 
 void SolverDPLL::BackTrack(unsigned int backToLv) {

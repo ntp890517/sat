@@ -48,10 +48,11 @@ class SolverDPLL : public Solver {
     private:
         void InitVariables(unsigned int);
         ClauseDPLL* ParseClause(string s);
-        //Solver::Result Preprocess();
+        void Preprocess();
         bool BCP(LiteralDPLL* assign);
         LiteralDPLL* Decide();
         //Solver::Result Deduce(Literal*);
+        unsigned Analyze();
         list<ClauseDPLL*> GetFirstUipCut();
         void BackTrack(unsigned int toLevel);
     private:

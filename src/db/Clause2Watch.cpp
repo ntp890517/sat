@@ -14,7 +14,7 @@ void Clause2Watch::Setup2Watch() {
 
 Literal* Clause2Watch::Deduce(Literal* assign) {
     if (! IsNeedUpdate(assign)) {
-        return NULL;
+        return nullptr;
     }
 
     unsigned int newWatchIdx;
@@ -41,15 +41,11 @@ Literal* Clause2Watch::Deduce(Literal* assign) {
     } else if (! GetWatch1()->IsUnsat() && GetWatch2()->IsUnsat()) {
         return GetWatch1();
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
 bool Clause2Watch::IsNeedUpdate(Literal* lit) {
-    if (lit->IsSat()) {
-        return false;
-    }
-
     if (lit != GetWatch1() && lit != GetWatch2()) {
         return false;
     }
