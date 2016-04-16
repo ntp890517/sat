@@ -101,7 +101,7 @@ class ImplicationGraph {
         void Conflict(ImplicationGraphNode *n1, ImplicationGraphNode *n2);
 
         void ResetFlags(unsigned int level);
-        ImplicationGraphNode* GetFirstUIP();
+        ImplicationGraphNode* GetFirstUip();
 
         ImplicationGraphNode* GetConflictNode() {return &_conflictNode;}
         ImplicationGraphEdge* GetConflictEdge() {return &_conflictEdge;}

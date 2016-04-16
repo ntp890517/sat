@@ -52,6 +52,7 @@ class SolverDPLL : public Solver {
         bool BCP(LiteralDPLL* assign);
         LiteralDPLL* Decide();
         //Solver::Result Deduce(Literal*);
+        list<ClauseDPLL*> GetFirstUipCut();
         void BackTrack(unsigned int toLevel);
     private:
         vector<ClauseDPLL*> _clauses;

@@ -47,7 +47,7 @@ void ImplicationGraph::ResetFlags(unsigned int lvl) {
     }
 }
 
-ImpNode* ImplicationGraph::GetFirstUIP() {
+ImpNode* ImplicationGraph::GetFirstUip() {
     ResetFlags(GetCurrentLevel());
 
     ImpNode* npt = GetConflictNode();

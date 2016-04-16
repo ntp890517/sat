@@ -130,6 +130,42 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
     return true;
 }
 
+list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
+    list<ImplicationGraphEdge*>::iterator eit;
+    list<ImplicationGraphNode*>::iterator nit;
+    queue<LiteralDPLL*> nodes;
+    list<ClauseDPLL*> cut;
+    ClauseDPLL* ept;
+    LiteralDPLL* npt;
+
+    LiteralDPLL* uip = static_cast<LiteralDPLL*>(_impGraph.GetFirstUip());
+
+    nodes.push(uip);
+
+    while (! nodes.empty()) {
+        npt = nodes.front();
+        nodes.pop();
+
+        for (eit = npt->GetOutEdgesBegin() ; eit != npt->GetOutEdgesEnd() ; eit++) { 
+            ept = static_cast<ClauseDPLL*>(*eit);
+            for (nit = ept->GetOutNodesBegin() ; nit != ept->GetOutNodesEnd() ; nit++) {
+                npt = static_cast<LiteralDPLL*>(*nit);
+                nodes.push(npt);
+            }
+
+            LiteralDPLL* w1 = static_cast<LiteralDPLL*>(ept->GetWatch1());
+            LiteralDPLL* w2 = static_cast<LiteralDPLL*>(ept->GetWatch1());
+            if (w1->GetLevel() != _impGraph.GetCurrentLevel() ||
+                w2->GetLevel() != _impGraph.GetCurrentLevel() ||
+                npt == uip) {
+                cut.push_back(ept);
+            }
+        }
+    }
+
+    return cut;
+}
+
 void SolverDPLL::BackTrack(unsigned int backToLv) {
     LiteralDPLL* node;
     LiteralDPLL* nextNode;
