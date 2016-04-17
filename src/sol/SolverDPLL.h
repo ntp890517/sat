@@ -49,7 +49,7 @@ class SolverDPLL : public Solver {
     private:
         void InitVariables(unsigned int);
         ClauseDPLL* ParseClause(string s);
-        void Preprocess();
+        bool Preprocess();
         bool BCP(LiteralDPLL* assign);
         LiteralDPLL* Decide();
         //Solver::Result Deduce(Literal*);

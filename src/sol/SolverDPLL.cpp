@@ -16,7 +16,9 @@ void SolverDPLL::ReadCnf(const string cnfName) {
             InitVariables(nVar);
         } else if (ss.peek() == '0') {
             break;
-        } else if (isdigit(ss.peek())) {
+        } else if (ss.peek() == EOF) {
+            continue;
+        } else {
             _clauses.push_back(ParseClause(ss.str()));
         }
     }
@@ -32,7 +34,11 @@ void SolverDPLL::ReadCnf(const string cnfName) {
 }
 
 void SolverDPLL::Solve() {
-    Preprocess();
+
+    if (! Preprocess()) {
+        _result = UNSAT;
+        return;
+    }
 
     LiteralDPLL* assign;
 
@@ -101,24 +107,31 @@ ClauseDPLL* SolverDPLL::ParseClause(string s) {
     return c;
 }
 
-void SolverDPLL::Preprocess() {
+bool SolverDPLL::Preprocess() {
+    _impGraph.AddDecideNode(nullptr);
     for (unsigned i = 0 ; i < _clauses.size() ; i++) {
         if (_clauses[i]->GetSize() == 1) {
             LiteralDPLL* lit = static_cast<LiteralDPLL*>(_clauses[i]->GetWatch1());
-            lit->GetVariable()->Assign(lit->GetSign());
-            lit->SetLevel(0);
+            if (! BCP(lit)) {
+                return false;
+            }
         }
     }
+
     _impGraph.AddDecideNode(nullptr);
+    return true;
 }
 
 LiteralDPLL* SolverDPLL::Decide() {
     Variable* v;
+    LiteralDPLL* assign;
     
     for (unsigned int i = 1 ; i < _variables.size() ; i++) {
         v = _variables[i];
         if (! v->IsAssigned()) {
-            return static_cast<LiteralDPLL*>(v->GetPosLit());
+            assign = static_cast<LiteralDPLL*>(v->GetPosLit());
+            _impGraph.AddDecideNode(assign);
+            return assign;
         }
     }
 
@@ -126,8 +139,6 @@ LiteralDPLL* SolverDPLL::Decide() {
 }
 
 bool SolverDPLL::BCP(LiteralDPLL* assign) {
-    _impGraph.AddDecideNode(assign);
-
     queue<LiteralDPLL*> impLits;
     LiteralDPLL* lit;
     LiteralDPLL* compLit;
@@ -151,6 +162,8 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
             if (! impLit) {
                 continue;
             } else if (impLit->IsUnsat()) {
+                if (_impGraph.GetCurrentLevel() == 0)
+                    return false;
                 _impGraph.Conflict(impLit, impLit->GetComplementLiteral());
                 return false;
             } else if (impLit) {
