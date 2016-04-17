@@ -10,6 +10,7 @@
 #include <queue>
 #include <vector>
 #include <iterator>
+#include <cctype>
 
 #include "../db/db.h"
 #include "../ut/ut.h"
@@ -58,6 +59,7 @@ class SolverDPLL : public Solver {
     private:
         vector<ClauseDPLL*> _clauses;
         vector<Variable*> _variables;
+        LiteralDPLL* _uip;
 
         ImplicationGraph _impGraph;
 };

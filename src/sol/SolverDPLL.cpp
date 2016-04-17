@@ -16,7 +16,7 @@ void SolverDPLL::ReadCnf(const string cnfName) {
             InitVariables(nVar);
         } else if (ss.peek() == '0') {
             break;
-        } else {
+        } else if (isdigit(ss.peek())) {
             _clauses.push_back(ParseClause(ss.str()));
         }
     }
@@ -45,7 +45,7 @@ void SolverDPLL::Solve() {
         }
 
         if (! BCP(assign)) {
-            unsigned backToLv = Analyze(); //TODO
+            unsigned backToLv = Analyze();
             if (backToLv  == 0) {
                 _result = UNSAT;
                 return;
@@ -95,6 +95,7 @@ ClauseDPLL* SolverDPLL::ParseClause(string s) {
         }
     }
 
+    c->Setup2Watch();
     c->GetWatch1()->AddClause(c);
     c->GetWatch2()->AddClause(c);
     return c;
@@ -176,6 +177,7 @@ list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
     LiteralDPLL* npt;
 
     LiteralDPLL* uip = static_cast<LiteralDPLL*>(_impGraph.GetFirstUip());
+    _uip = uip;
 
     nodes.push(uip);
 
@@ -206,11 +208,37 @@ list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
 unsigned SolverDPLL::Analyze() {
     list<ClauseDPLL*> uipCut = GetFirstUipCut();
     list<ClauseDPLL*>::iterator cit;
-    //ClauseDPLL* lnCls = new ClauseDPLL;
+    list<LiteralDPLL*>::iterator lit;
+    ClauseDPLL* cpt;
+    LiteralDPLL* lpt;
+    ClauseDPLL* lnCls = new ClauseDPLL;
+    unsigned lowestLevel;
+
+    lnCls->Insert(_uip);
+    lowestLevel = _uip->GetLevel();
 
     for (cit = uipCut.begin() ; cit != uipCut.end() ; cit++) {
-        ;
+        cpt = *cit;
+        for (unsigned i = 0 ; i < cpt->GetSize() ; i++) {
+            lpt = static_cast<LiteralDPLL*>(cpt->Get(i));
+            if (lpt->GetLevel() != _impGraph.GetCurrentLevel()) {
+                lnCls->Insert(lpt);
+                lowestLevel = (lpt->GetLevel() < lowestLevel)? 
+                               lpt->GetLevel() : lowestLevel;
+            }
+        }
     }
+
+    lnCls->Setup2Watch();
+    lnCls->GetWatch1()->AddClause(lnCls);
+    lnCls->GetWatch2()->AddClause(lnCls);
+
+    if (lnCls->GetSize() == 1) {
+        lpt = static_cast<LiteralDPLL*>(lnCls->Get(0));
+        lpt->GetVariable()->Assign(lpt->GetSign());
+        lpt->SetLevel(0);
+    }
+
     return 0;
 }
 
