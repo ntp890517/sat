@@ -15,13 +15,16 @@ $(EXEC): $(MAIN:.cpp=.o) $(OBJS)
 	$(CXX) $(LD_FLAGS) $^ -o $(EXEC) 
 
 $(MAIN:.cpp=.o): $(MAIN)
-	$(CXX) $(CSS_FLAGS) -c -o $@ $<
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 $(OBJS): %.o:%.cpp %.h
 	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 $(TEST_EXEC): $(TEST:.cpp=.o) $(OBJS)
 	$(CXX) $(LD_FLAGS) $^ -o $(TEST_EXEC)
+
+$(TEST:.cpp=.o): $(TEST) $(OBJS)
+	$(CXX) $(CXX_FLAGS) -c -o $@ $<
 
 .PHONY: all clean regression test
 
