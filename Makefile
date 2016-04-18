@@ -37,19 +37,19 @@ clean:
 
 regression:
 	@echo "\n[Run] sat.1.cnf"
-	@./$(EXEC) cases/tiny/sat.1.cnf
+	@./$(EXEC) regression/sat.1.cnf
 	@echo "\n[Run] sat.2.cnf"
-	@./$(EXEC) cases/tiny/sat.2.cnf
+	@./$(EXEC) regression/sat.2.cnf
 	@echo "\n[Run] sat.3.cnf"
-	@./$(EXEC) cases/tiny/sat.3.cnf
+	@./$(EXEC) regression/sat.3.cnf
 	@echo "\n[Run] sat.4.cnf"
-	@./$(EXEC) cases/tiny/sat.4.cnf
+	@./$(EXEC) regression/sat.4.cnf
 	@echo "\n[Run] unsat.cnf"
-	@./$(EXEC) cases/tiny/unsat.cnf
+	@./$(EXEC) regression/unsat.cnf
 	@echo "\n[Run] unsat.1.cnf"
-	@./$(EXEC) cases/tiny/unsat.1.cnf
+	@./$(EXEC) regression/unsat.1.cnf
 	@echo "\n[Run] unsat.2.cnf"
-	@./$(EXEC) cases/tiny/unsat.2.cnf
+	@./$(EXEC) regression/unsat.2.cnf
 
 test: $(TEST_EXEC)
 	@echo "\n[Run] clauseTest"
