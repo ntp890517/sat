@@ -56,13 +56,13 @@ int main() {
 
     c2wTest.TEST_BEGIN("watch1 deduce");
     var1->Assign(false);
-    c2w->Deduce(var1->GetPosLit());
+    c2w->Deduce(var1->GetNegLit());
     c2wTest.TEST_EQUAL(3, c2w->GetWatch1()->GetNumeric());
     c2wTest.TEST_END();
 
     c2wTest.TEST_BEGIN("imply");
     var2->Assign(true);
-    Literal * impLit = c2w->Deduce(var2->GetNegLit());
+    Literal * impLit = c2w->Deduce(var2->GetPosLit());
     c2wTest.TEST_EQUAL(3, impLit->GetNumeric());
     c2wTest.TEST_END();
 
