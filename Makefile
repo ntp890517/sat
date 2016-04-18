@@ -42,6 +42,8 @@ regression:
 	@./$(EXEC) cases/tiny/sat.2.cnf
 	@echo "\n[Run] sat.3.cnf"
 	@./$(EXEC) cases/tiny/sat.3.cnf
+	@echo "\n[Run] sat.4.cnf"
+	@./$(EXEC) cases/tiny/sat.4.cnf
 	@echo "\n[Run] unsat.cnf"
 	@./$(EXEC) cases/tiny/unsat.cnf
 	@echo "\n[Run] unsat.1.cnf"

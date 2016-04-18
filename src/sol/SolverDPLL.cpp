@@ -145,6 +145,8 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
     LiteralDPLL* impLit;
     list<Clause*>::iterator cit;
     ClauseDPLL* cls;
+    list<ClauseDPLL*> relatedClauses;
+    list<ClauseDPLL*>::iterator clsIt;
 
     impLits.push(assign);
 
@@ -157,7 +159,11 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
         compLit = lit->GetComplementLiteral();
 
         for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
-            cls = static_cast<ClauseDPLL*>(*cit);
+            relatedClauses.push_back(static_cast<ClauseDPLL*>(*cit));
+        }
+
+        for (clsIt = relatedClauses.begin() ; clsIt != relatedClauses.end() ; clsIt++) {
+            cls = (*clsIt);
             impLit = cls->Deduce(lit);
             if (! impLit) {
                 continue;
