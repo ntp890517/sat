@@ -44,12 +44,13 @@ void SolverDPLL::Solve() {
 
     while (1) {
         assign = Decide();
-        cout << "[Assign] " << assign->GetString() << endl;
 
         if (! assign) {
             _result = SAT;
             return;
         }
+
+        //cout << "[Assign] " << assign->GetString() << endl;
 
         if (! BCP(assign)) {
             unsigned backToLv = Analyze();
@@ -179,7 +180,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
                 cls->AddInNode(lit);
                 cls->AddOutNode(impLit);
                 impLit->AddInEdge(cls);
-                cout << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
+                //cout << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
             } else {
                 continue;
             }
@@ -236,7 +237,7 @@ unsigned SolverDPLL::Analyze() {
     ClauseDPLL* lnCls = new ClauseDPLL;
     unsigned lowestLevel;
 
-    lnCls->Insert(_uip);
+    lnCls->Insert(_uip->GetComplementLiteral());
     lowestLevel = _uip->GetLevel();
 
     for (cit = uipCut.begin() ; cit != uipCut.end() ; cit++) {
@@ -251,7 +252,7 @@ unsigned SolverDPLL::Analyze() {
         }
     }
 
-    cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
+    //cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
     lnCls->Setup2Watch();
     lnCls->GetWatch1()->AddClause(lnCls);
     lnCls->GetWatch2()->AddClause(lnCls);

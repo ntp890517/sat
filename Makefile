@@ -42,6 +42,8 @@ regression:
 	@./$(EXEC) regression/sat.2.cnf
 	@echo "\n[Run] sat.3.cnf"
 	@./$(EXEC) regression/sat.3.cnf
+	@echo "\n[Run] sat.4.shrink.cnf"
+	@./$(EXEC) regression/sat.4.shrink.cnf
 	@echo "\n[Run] sat.4.cnf"
 	@./$(EXEC) regression/sat.4.cnf
 	@echo "\n[Run] unsat.cnf"
