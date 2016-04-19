@@ -74,6 +74,7 @@ ImpNode* ImplicationGraph::GetFirstUip() {
                     continue;
                 } else {
                     nodes.push(*nit);
+                    (*nit)->SetFlag1();
                 }
             }
             (*eit)->SetFlag1();

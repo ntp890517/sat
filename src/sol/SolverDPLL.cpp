@@ -44,6 +44,7 @@ void SolverDPLL::Solve() {
 
     while (1) {
         assign = Decide();
+        cout << "[Assign] " << assign->GetString() << endl;
 
         if (! assign) {
             _result = SAT;
@@ -118,7 +119,6 @@ bool SolverDPLL::Preprocess() {
         }
     }
 
-    _impGraph.AddDecideNode(nullptr);
     return true;
 }
 
@@ -157,6 +157,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
         lit->GetVariable()->Assign(lit->GetSign());
         lit->SetLevel(_impGraph.GetCurrentLevel());
         compLit = lit->GetComplementLiteral();
+        compLit->SetLevel(_impGraph.GetCurrentLevel());
 
         for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
             relatedClauses.push_back(static_cast<ClauseDPLL*>(*cit));
@@ -178,6 +179,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
                 cls->AddInNode(lit);
                 cls->AddOutNode(impLit);
                 impLit->AddInEdge(cls);
+                cout << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
             } else {
                 continue;
             }
@@ -194,6 +196,7 @@ list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
     list<ClauseDPLL*> cut;
     ClauseDPLL* ept;
     LiteralDPLL* npt;
+    LiteralDPLL* lit;
 
     LiteralDPLL* uip = static_cast<LiteralDPLL*>(_impGraph.GetFirstUip());
     _uip = uip;
@@ -207,16 +210,16 @@ list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
         for (eit = npt->GetOutEdgesBegin() ; eit != npt->GetOutEdgesEnd() ; eit++) { 
             ept = static_cast<ClauseDPLL*>(*eit);
             for (nit = ept->GetOutNodesBegin() ; nit != ept->GetOutNodesEnd() ; nit++) {
-                npt = static_cast<LiteralDPLL*>(*nit);
-                nodes.push(npt);
+                nodes.push(static_cast<LiteralDPLL*>(*nit));
             }
 
-            LiteralDPLL* w1 = static_cast<LiteralDPLL*>(ept->GetWatch1());
-            LiteralDPLL* w2 = static_cast<LiteralDPLL*>(ept->GetWatch1());
-            if (w1->GetLevel() != _impGraph.GetCurrentLevel() ||
-                w2->GetLevel() != _impGraph.GetCurrentLevel() ||
-                npt == uip) {
-                cut.push_back(ept);
+            for (unsigned i = 0 ; i < ept->GetSize() ; i++) {
+                lit = static_cast<LiteralDPLL*>(ept->Get(i));
+                if (lit->GetLevel() != _impGraph.GetCurrentLevel() ||
+                    npt == uip) {
+                    cut.push_back(ept);
+                    break;
+                }
             }
         }
     }
@@ -248,6 +251,7 @@ unsigned SolverDPLL::Analyze() {
         }
     }
 
+    cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
     lnCls->Setup2Watch();
     lnCls->GetWatch1()->AddClause(lnCls);
     lnCls->GetWatch2()->AddClause(lnCls);
@@ -258,7 +262,7 @@ unsigned SolverDPLL::Analyze() {
         lpt->SetLevel(0);
     }
 
-    return 0;
+    return lowestLevel;
 }
 
 void SolverDPLL::BackTrack(unsigned int backToLv) {
