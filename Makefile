@@ -8,6 +8,8 @@ MAIN = src/main/main.cpp
 TEST = src/main/clauseTest.cpp
 MODULES = db sol test
 MOD_DIRS = $(addprefix src/,$(MODULES))
+REG_DIR = regression
+REG_CASES = $(wildcard $(REG_DIR)/*.cnf)
 CPP_FILES = $(foreach mod_dir,$(MOD_DIRS),$(wildcard $(mod_dir)/*.cpp))
 OBJS = $(CPP_FILES:.cpp=.o)
 
@@ -36,22 +38,9 @@ clean:
 	-rm -f $(TEST_EXEC)
 
 regression:
-	@echo "\n[Run] sat.1.cnf"
-	@./$(EXEC) regression/sat.1.cnf
-	@echo "\n[Run] sat.2.cnf"
-	@./$(EXEC) regression/sat.2.cnf
-	@echo "\n[Run] sat.3.cnf"
-	@./$(EXEC) regression/sat.3.cnf
-	@echo "\n[Run] sat.4.shrink.cnf"
-	@./$(EXEC) regression/sat.4.shrink.cnf
-	@echo "\n[Run] sat.4.cnf"
-	@./$(EXEC) regression/sat.4.cnf
-	@echo "\n[Run] unsat.cnf"
-	@./$(EXEC) regression/unsat.cnf
-	@echo "\n[Run] unsat.1.cnf"
-	@./$(EXEC) regression/unsat.1.cnf
-	@echo "\n[Run] unsat.2.cnf"
-	@./$(EXEC) regression/unsat.2.cnf
+	@$(foreach case,$(REG_CASES),\
+	    echo "\n[Run] $(case)";\
+	    ./$(EXEC) $(case);)
 
 test: $(TEST_EXEC)
 	@echo "\n[Run] clauseTest"
