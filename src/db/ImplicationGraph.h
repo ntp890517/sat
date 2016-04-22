@@ -10,7 +10,7 @@ using namespace std;
 
 class ImplicationGraphObj {
     public:
-        void ResetFlags() {_flag1 = _flag2 = false;}
+        void ResetFlags() {_flag1 = _flag2 = _isConflictCore = false;}
 
         void SetFlag1() {_flag1 = true;}
         void UnsetFlag1() {_flag1 = false;}
@@ -20,9 +20,14 @@ class ImplicationGraphObj {
         void UnsetFlag2() {_flag2 = false;}
         bool Flag2() {return _flag2;}
 
+        void SetConflictCore() {_isConflictCore = true;}
+        void UnsetConflictCore() {_isConflictCore = false;}
+        bool IsConflictCore() {return _isConflictCore;}
+
     private:
         bool _flag1;
         bool _flag2;
+        bool _isConflictCore;
 };
 
 class ImplicationGraphEdge;

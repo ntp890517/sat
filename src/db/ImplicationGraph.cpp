@@ -68,6 +68,7 @@ ImpNode* ImplicationGraph::GetFirstUip() {
         }
 
         npt->SetFlag2();
+        npt->SetConflictCore();
         for (eit = npt->GetInEdgesBegin() ; eit != npt->GetInEdgesEnd() ; eit++) {
             for (nit = (*eit)->GetInNodesBegin() ; nit != (*eit)->GetInNodesEnd() ; nit++) {
                 if ((*nit)->Flag1()) {
@@ -78,6 +79,7 @@ ImpNode* ImplicationGraph::GetFirstUip() {
                 }
             }
             (*eit)->SetFlag1();
+            (*eit)->SetConflictCore();
         }
     } while (nodes.size() != 1);
 

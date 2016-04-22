@@ -50,7 +50,7 @@ class SolverDPLL : public Solver {
         void InitVariables(unsigned int);
         ClauseDPLL* ParseClause(string s);
         bool Preprocess();
-        bool BCP(LiteralDPLL* assign);
+        bool BCP(LiteralDPLL* assign, unsigned int level);
         LiteralDPLL* Decide();
         //Solver::Result Deduce(Literal*);
         unsigned Analyze();

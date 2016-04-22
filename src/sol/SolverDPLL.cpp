@@ -50,9 +50,9 @@ void SolverDPLL::Solve() {
             return;
         }
 
-        //cout << "[Assign] " << assign->GetString() << endl;
+        cout << "[Assign] " << assign->GetString() << endl;
 
-        if (! BCP(assign)) {
+        if (! BCP(assign, _impGraph.GetCurrentLevel())) {
             unsigned backToLv = Analyze();
             if (backToLv  == 0) {
                 _result = UNSAT;
@@ -114,7 +114,7 @@ bool SolverDPLL::Preprocess() {
     for (unsigned i = 0 ; i < _clauses.size() ; i++) {
         if (_clauses[i]->GetSize() == 1) {
             LiteralDPLL* lit = static_cast<LiteralDPLL*>(_clauses[i]->GetWatch1());
-            if (! BCP(lit)) {
+            if (! BCP(lit, 0)) {
                 return false;
             }
         }
@@ -139,7 +139,7 @@ LiteralDPLL* SolverDPLL::Decide() {
     return nullptr;
 }
 
-bool SolverDPLL::BCP(LiteralDPLL* assign) {
+bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
     queue<LiteralDPLL*> impLits;
     LiteralDPLL* lit;
     LiteralDPLL* compLit;
@@ -156,10 +156,11 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
         impLits.pop();
 
         lit->GetVariable()->Assign(lit->GetSign());
-        lit->SetLevel(_impGraph.GetCurrentLevel());
+        lit->SetLevel(level);
         compLit = lit->GetComplementLiteral();
-        compLit->SetLevel(_impGraph.GetCurrentLevel());
+        compLit->SetLevel(level);
 
+        relatedClauses.clear();
         for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
             relatedClauses.push_back(static_cast<ClauseDPLL*>(*cit));
         }
@@ -170,8 +171,9 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
             if (! impLit) {
                 continue;
             } else if (impLit->IsUnsat()) {
-                if (_impGraph.GetCurrentLevel() == 0)
+                if (level == 0) {
                     return false;
+                }
                 _impGraph.Conflict(impLit, impLit->GetComplementLiteral());
                 return false;
             } else if (impLit) {
@@ -180,7 +182,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign) {
                 cls->AddInNode(lit);
                 cls->AddOutNode(impLit);
                 impLit->AddInEdge(cls);
-                //cout << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
+                cout << lit->GetString() <<" " << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
             } else {
                 continue;
             }
@@ -216,8 +218,9 @@ list<ClauseDPLL*> SolverDPLL::GetFirstUipCut() {
 
             for (unsigned i = 0 ; i < ept->GetSize() ; i++) {
                 lit = static_cast<LiteralDPLL*>(ept->Get(i));
-                if (lit->GetLevel() != _impGraph.GetCurrentLevel() ||
-                    npt == uip) {
+                if ((lit->GetLevel() != _impGraph.GetCurrentLevel() ||
+                    npt == uip) &&
+                    ept->IsConflictCore()) {
                     cut.push_back(ept);
                     break;
                 }
@@ -252,15 +255,20 @@ unsigned SolverDPLL::Analyze() {
         }
     }
 
-    //cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
+    cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
     lnCls->Setup2Watch();
     lnCls->GetWatch1()->AddClause(lnCls);
     lnCls->GetWatch2()->AddClause(lnCls);
+    _clauses.push_back(lnCls);
 
     if (lnCls->GetSize() == 1) {
         lpt = static_cast<LiteralDPLL*>(lnCls->Get(0));
-        lpt->GetVariable()->Assign(lpt->GetSign());
-        lpt->SetLevel(0);
+        BackTrack(1);
+        if (! BCP(lpt, 0)) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     return lowestLevel;
@@ -274,7 +282,7 @@ void SolverDPLL::BackTrack(unsigned int backToLv) {
     list<ImplicationGraphEdge*>::iterator eit;
     list<ImplicationGraphNode*>::iterator nit;
 
-    for (unsigned int lvl = backToLv ; lvl <= _impGraph.GetCurrentLevel() ; lvl++) {
+    for (unsigned int lvl = _impGraph.GetCurrentLevel() ; lvl >= backToLv ; lvl--) {
         nodeQueue.push(static_cast<LiteralDPLL*>(_impGraph.GetDecideNode(lvl)));
         while (! nodeQueue.empty()) {
             node = nodeQueue.front();
@@ -291,6 +299,7 @@ void SolverDPLL::BackTrack(unsigned int backToLv) {
             }
             node->PurgeRelatedEdges();
         }
+        _impGraph.PopBackDecideNode();
     }
 }
 
