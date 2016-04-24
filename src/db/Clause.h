@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <cstdarg>
 #include <typeinfo>
+#include <algorithm>
 
 #include "Literal.h"
 #include "../ut/ut.h"
@@ -29,6 +30,7 @@ class Clause {
                 assert(0);
             }
         }
+        void Unique();
 
         virtual string GetString();
     protected:
