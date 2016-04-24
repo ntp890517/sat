@@ -9,7 +9,7 @@ bool ImplicationGraphNode::IsAllOutEdgesFlag1() {
     list<ImpEdge*>::iterator eit;
 
     for (eit = _outEdges.begin() ; eit != _outEdges.end() ; eit++) {
-        if (! (*eit)->Flag1()) {
+        if (! (*eit)->Flag1() && (*eit)->IsConflictCore()) {
             return false;
         }
     }

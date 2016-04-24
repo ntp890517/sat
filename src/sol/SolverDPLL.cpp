@@ -50,7 +50,7 @@ void SolverDPLL::Solve() {
             return;
         }
 
-        cout << "[Assign] " << assign->GetString() << endl;
+        //cout << "[Assign] " << assign->GetString() << endl;
 
         if (! BCP(assign, _impGraph.GetCurrentLevel())) {
             unsigned backToLv = Analyze();
@@ -161,7 +161,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
         if (implyBy) {
             lit->AddInEdge(implyBy);
             implyBy->AddOutNode(lit);
-            cout << "(" << implyBy->GetString() << ") " << lit->GetString() << endl;
+            //cout << "(" << implyBy->GetString() << ") " << lit->GetString() << endl;
             for (unsigned i = 0 ; i < implyBy->GetSize() ; i++) {
                 LiteralDPLL* l = static_cast<LiteralDPLL*>(implyBy->Get(i));
                 if (l == lit) {
@@ -171,7 +171,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
                 if (l->GetLevel() == level) {
                     l->AddOutEdge(implyBy);
                     implyBy->AddInNode(l);
-                    cout << l->GetString() << " (" << implyBy->GetString() << ")" << endl;
+                    //cout << l->GetString() << " (" << implyBy->GetString() << ")" << endl;
                 }
             }
         }
@@ -194,7 +194,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
                 }
                 impLit->AddInEdge(cls);
                 cls->AddOutNode(impLit);
-                cout << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
+                //cout << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
                 for (unsigned i = 0 ; i < implyBy->GetSize() ; i++) {
                     LiteralDPLL* l = static_cast<LiteralDPLL*>(cls->Get(i));
                     if (l == impLit) {
@@ -204,14 +204,14 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
                     if (l->GetLevel() == level) {
                         l->AddOutEdge(cls);
                         cls->AddInNode(l);
-                        cout << l->GetString() << " (" << cls->GetString() << ")" << endl;
+                        //cout << l->GetString() << " (" << cls->GetString() << ")" << endl;
                     }
                 }
                 _impGraph.Conflict(impLit, impLit->GetComplementLiteral());
                 return false;
             } else if (impLit) {
                 imply.push(make_pair(cls, impLit));
-                cout << lit->GetString() <<" " << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
+                //cout << lit->GetString() <<" " << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
             } else {
                 continue;
             }
@@ -289,7 +289,7 @@ unsigned SolverDPLL::Analyze() {
     lnCls->GetWatch1()->AddClause(lnCls);
     lnCls->GetWatch2()->AddClause(lnCls);
     _clauses.push_back(lnCls);
-    cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
+    //cout << "learnt Cls: (" << lnCls->GetString() << ")" << endl;
 
     if (lnCls->GetSize() == 1) {
         lpt = static_cast<LiteralDPLL*>(lnCls->Get(0));
