@@ -140,7 +140,6 @@ LiteralDPLL* SolverDPLL::Decide() {
 }
 
 bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
-    queue<LiteralDPLL*> impLits;
     LiteralDPLL* lit;
     LiteralDPLL* compLit;
     LiteralDPLL* impLit;
@@ -148,15 +147,28 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
     ClauseDPLL* cls;
     list<ClauseDPLL*> relatedClauses;
     list<ClauseDPLL*>::iterator clsIt;
+    queue<pair<ClauseDPLL*, LiteralDPLL*> > imply;
 
-    impLits.push(assign);
+    imply.push(make_pair(nullptr, assign));
 
-    while (! impLits.empty()) {
-        lit = impLits.front();
-        impLits.pop();
+    while (! imply.empty()) {
+        lit = imply.front().second;
+        ClauseDPLL* implyBy = imply.front().first;
+        imply.pop();
 
         lit->GetVariable()->Assign(lit->GetSign());
         lit->SetLevel(level);
+        if (implyBy) {
+            lit->AddInEdge(implyBy);
+            implyBy->AddOutNode(lit);
+            for (unsigned i = 0 ; i < implyBy->GetSize() ; i++) {
+                LiteralDPLL* l = static_cast<LiteralDPLL*>(implyBy->Get(i)->GetComplementLiteral());
+                if (l->GetLevel() == level) {
+                    l->AddOutEdge(implyBy);
+                    implyBy->AddInNode(l);
+                }
+            }
+        }
         compLit = lit->GetComplementLiteral();
         compLit->SetLevel(level);
 
@@ -177,11 +189,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
                 _impGraph.Conflict(impLit, impLit->GetComplementLiteral());
                 return false;
             } else if (impLit) {
-                impLits.push(impLit);
-                lit->AddOutEdge(cls);
-                cls->AddInNode(lit);
-                cls->AddOutNode(impLit);
-                impLit->AddInEdge(cls);
+                imply.push(make_pair(cls, impLit));
                 cout << lit->GetString() <<" " << "(" << cls->GetString() << ") " << impLit->GetString() << endl;
             } else {
                 continue;
