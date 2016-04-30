@@ -111,6 +111,8 @@ class ImplicationGraph {
         ImplicationGraphNode* GetConflictNode() {return &_conflictNode;}
         ImplicationGraphEdge* GetConflictEdge() {return &_conflictEdge;}
     private:
+        void MarkConflictCore();
+
         vector<ImplicationGraphNode*> _decideNodes;
         ImplicationGraphNode _conflictNode;
         ImplicationGraphEdge _conflictEdge;

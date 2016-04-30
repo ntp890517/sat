@@ -47,8 +47,31 @@ void ImplicationGraph::ResetFlags(unsigned int lvl) {
     }
 }
 
+void ImplicationGraph::MarkConflictCore() {
+    ImpNode* npt = GetConflictNode();
+    queue<ImpNode*> nodes;
+    list<ImpEdge*>::iterator eit;
+    list<ImpNode*>::iterator nit;
+
+    nodes.push(npt);
+
+    do {
+        npt = nodes.front();
+        nodes.pop();
+
+        npt->SetConflictCore();
+        for (eit = npt->GetInEdgesBegin() ; eit != npt->GetInEdgesEnd() ; eit++) {
+            for (nit = (*eit)->GetInNodesBegin() ; nit != (*eit)->GetInNodesEnd() ; nit++) {
+                nodes.push(*nit);
+            }
+            (*eit)->SetConflictCore();
+        }
+    } while (! nodes.empty());
+}
+
 ImpNode* ImplicationGraph::GetFirstUip() {
     ResetFlags(GetCurrentLevel());
+    MarkConflictCore();
 
     ImpNode* npt = GetConflictNode();
     queue<ImpNode*> nodes;
@@ -68,7 +91,6 @@ ImpNode* ImplicationGraph::GetFirstUip() {
         }
 
         npt->SetFlag2();
-        npt->SetConflictCore();
         for (eit = npt->GetInEdgesBegin() ; eit != npt->GetInEdgesEnd() ; eit++) {
             for (nit = (*eit)->GetInNodesBegin() ; nit != (*eit)->GetInNodesEnd() ; nit++) {
                 if ((*nit)->Flag1()) {
@@ -79,7 +101,6 @@ ImpNode* ImplicationGraph::GetFirstUip() {
                 }
             }
             (*eit)->SetFlag1();
-            (*eit)->SetConflictCore();
         }
     } while (nodes.size() != 1);
 
