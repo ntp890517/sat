@@ -19,12 +19,16 @@ typedef unsigned int Level;
 
 using namespace std;
 
+class ClauseDPLL;
+
 class LiteralDPLL : public Literal, public ImplicationGraphNode {
     public:
         LiteralDPLL(Variable *var, const bool sign) : Literal(var, sign) {};
         LiteralDPLL* GetComplementLiteral() {
             return static_cast<LiteralDPLL*>(Literal::GetComplementLiteral());
         }
+        void AddClause(ClauseDPLL* clause) {Literal::AddClause(reinterpret_cast<Clause*>(clause));}
+        void RemoveClause(ClauseDPLL* clause) {Literal::RemoveClause(reinterpret_cast<Clause*>(clause));}
 };
 
 class ClauseDPLL : public Clause2Watch, public ImplicationGraphEdge {

@@ -163,7 +163,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
             implyBy->AddOutNode(lit);
             cout << "(" << implyBy->GetString() << ") " << lit->GetString() << endl;
             for (unsigned i = 0 ; i < implyBy->GetSize() ; i++) {
-                LiteralDPLL* l = static_cast<LiteralDPLL*>(implyBy->Get(i));
+                LiteralDPLL* l = reinterpret_cast<LiteralDPLL*>(implyBy->Get(i));
                 if (l == lit) {
                     continue;
                 }
@@ -180,7 +180,7 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
 
         relatedClauses.clear();
         for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
-            relatedClauses.push_back(static_cast<ClauseDPLL*>(*cit));
+            relatedClauses.push_back(reinterpret_cast<ClauseDPLL*>(*cit));
         }
 
         for (clsIt = relatedClauses.begin() ; clsIt != relatedClauses.end() ; clsIt++) {
@@ -277,7 +277,8 @@ unsigned SolverDPLL::Analyze() {
         cpt = *cit;
         for (unsigned i = 0 ; i < cpt->GetSize() ; i++) {
             lpt = static_cast<LiteralDPLL*>(cpt->Get(i));
-            if (lpt->GetLevel() != _impGraph.GetCurrentLevel()) {
+            if (lpt->GetLevel() != _impGraph.GetCurrentLevel() && 
+                lpt->GetLevel() != 0) {
                 lnCls->Insert(lpt);
                 lowestLevel = (lpt->GetLevel() < lowestLevel)? 
                                lpt->GetLevel() : lowestLevel;
