@@ -28,8 +28,17 @@ class Solver {
         void SetDebug() {_debug = true;}
         void UnsetDebug() {_debug = false;}
         bool IsDebug() {return _debug;}
+
+        void SetDebugLiteral(Literal* lit) {_debugLit = lit;}
+        Literal* GetDebugLiteral() {return _debugLit;}
+
+        void SetDebugClause(Clause* cls) {_debugCls = cls;}
+        Clause* GetDebugClause() {return _debugCls;}
     protected:
         Result _result;
         bool _debug;
+
+        Literal* _debugLit;
+        Clause* _debugCls;
 };
 #endif
