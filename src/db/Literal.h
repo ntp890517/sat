@@ -38,11 +38,14 @@ class Literal {
         void ReplaceClause(Clause* from, Clause* to);
         bool HasNoRelatedClauses() {return _clauses.empty();}
 
-        list<Clause*>::iterator GetClausesBegin() {return _clauses.begin();}
-        list<Clause*>::iterator GetClausesEnd() {return _clauses.end();}
+        void SetupClausesIt() {_cit = _clauses.begin();}
+        Clause* GetClause() {return (*_cit);}
+        bool IsClausesEnd() {return (_cit == _clauses.end());}
+        void NextClause() {_cit++;}
     protected:
         Variable *_var;
         bool      _sign;
+        list<Clause*>::iterator _cit;
         list<Clause*> _clauses;
 };
 

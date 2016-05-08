@@ -179,8 +179,8 @@ bool SolverDPLL::BCP(LiteralDPLL* assign, unsigned int level) {
         compLit->SetLevel(level);
 
         relatedClauses.clear();
-        for (cit = compLit->GetClausesBegin() ; cit != compLit->GetClausesEnd() ; cit++) {
-            relatedClauses.push_back(static_cast<ClauseDPLL*>(*cit));
+        for (compLit->SetupClausesIt() ; ! compLit->IsClausesEnd() ; compLit->NextClause() ) {
+            relatedClauses.push_back(static_cast<ClauseDPLL*>(compLit->GetClause()));
         }
 
         for (clsIt = relatedClauses.begin() ; clsIt != relatedClauses.end() ; clsIt++) {

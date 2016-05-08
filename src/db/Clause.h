@@ -37,20 +37,4 @@ class Clause {
         vector<Literal*> _literals;
 };
 
-//static bool IncreaseVariableOrder(Literal* lit1, Literal* lit2) {
-//    unsigned v1 = lit1->GetVariable()->GetNumeric();
-//    unsigned v2 = lit2->GetVariable()->GetNumeric();
-//
-//    if (v1 < v2) {
-//        return true;
-//    } else if (v1 > v2) {
-//        return false;
-//    } else {
-//        if (lit1->IsPos()) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//}
 #endif
