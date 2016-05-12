@@ -44,7 +44,7 @@ void DpllCnfBuilder::BuildClause(string s) {
     _cnf->PushClause(c);
 }
 
-void DpllCnfBuilder::PostProecess() {
+void DpllCnfBuilder::PostProcess() {
     Setup2WatchLiteral();
     _isDone = true;
 }

@@ -29,6 +29,8 @@ class Cnf {
 
         unsigned GetVariablesSize() {return _variables.size() - 1;}
         unsigned GetClausesSize() {return _clauses.size();}
+
+        void Dump();
     protected:
         vector<Clause*> _clauses;
         vector<Variable*> _variables;

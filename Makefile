@@ -1,11 +1,11 @@
 CXX = g++
 EXEC = sat
-TEST_EXEC = clauseTest
+TEST_EXEC = Test
 CXX_FLAGS = -g -Wall -std=c++11
 LD_FLAGS = -g -std=c++11
 
 MAIN = src/main/main.cpp
-TEST = src/main/clauseTest.cpp
+TEST = src/main/Test.cpp
 MODULES = db sol test
 MOD_DIRS = $(addprefix src/,$(MODULES))
 REG_DIR = regression
@@ -43,5 +43,5 @@ regression:
 	    ./$(EXEC) $(case);)
 
 test: $(TEST_EXEC)
-	@echo "\n[Run] clauseTest"
-	@./$(TEST_EXEC)
+	@echo "\n[Run] Test"
+	@./$(TEST_EXEC) regression/sat.1.cnf

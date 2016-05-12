@@ -1,12 +1,22 @@
 #include "../db/Clause.h"
 #include "../db/Clause2Watch.h"
 #include "../test/Test.h"
+#include "../sol/Parser.h"
+#include "../sol/CnfBuilder.h"
+#include "../db/Cnf.h"
 #include <iostream>
 
 using namespace std;
 
-// Clause = ( 1 -2 3 )
-int main() {
+int main(int argc,const char *argv[]) {
+    Parser p;
+    DpllCnfBuilder bld;
+    Cnf* pCnf;
+
+    pCnf = p.ReadCnf(argv[1], &bld);
+    pCnf->Dump();
+
+    // Clause = ( 1 -2 3 )
     Clause* c = new Clause();
 
     Variable* var1 = new Variable(1);
