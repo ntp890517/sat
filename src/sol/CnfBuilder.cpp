@@ -1,6 +1,17 @@
 #include "CnfBuilder.h"
 
 #include "../db/db.h"
+#include "../ut/ut.h"
+
+Cnf* CnfBuilder::GetCnf() {
+    if (_isDone) {
+        return _cnf;
+    } else {
+        PROGERROR() << "Cnf building is not finised" << endl;
+        assert(0);
+        return nullptr;
+    }
+};
 
 void DpllCnfBuilder::BuildVariableTable(unsigned nrVars) {
     for (unsigned i = 0 ; i < nrVars+1 ; i++) {
@@ -35,6 +46,7 @@ void DpllCnfBuilder::BuildClause(string s) {
 
 void DpllCnfBuilder::PostProecess() {
     Setup2WatchLiteral();
+    _isDone = true;
 }
 
 void DpllCnfBuilder::Setup2WatchLiteral() {

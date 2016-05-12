@@ -9,6 +9,8 @@ class CnfBuilder {
         virtual void BuildVariableTable(unsigned nrVars) = 0;
         virtual void BuildClause(string s) = 0;
         virtual void PostProcess() {};
+
+        Cnf* GetCnf();
     protected:
         bool _isDone;
         Cnf* _cnf;
